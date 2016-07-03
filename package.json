@@ -74,6 +74,7 @@
   },
   "dependencies": {
     "vue": "^1.0.4",
-    "vue-router": "^0.7.5"
+    "vue-router": "^0.7.5",
+    "vuex": "^1.0.0-rc"
   }
 }
