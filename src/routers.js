@@ -2,7 +2,7 @@
 
 export default function(router){
     router.map({
-        '/':{				//首页
+        '/':{				
             name:'home',
             component: function(resolve){
                 require(['./views/index.vue'],resolve);
@@ -11,13 +11,44 @@ export default function(router){
         /* 404路由 */
         '*': {
             component: function(resolve){
-                require(['./views/index.vue'],resolve);
+                // require(['./views/index.vue'],resolve);
             }
         },
-        '/cnodevue':{               //首页
-            name:'home',
+        '/sys':{               
             component: function(resolve){
-                require(['./views/index.vue'],resolve);
+                require(['./views/line.vue'],resolve);
+            },
+            subRoutes: {
+                "/line": {
+                    name: "line",
+                    component : function(resolve){
+                       require(['./views/line.vue'],resolve);
+                    }
+                },
+                "/role": {
+                    name: "role",
+                    component : function(resolve){
+                       require(['./views/role.vue'],resolve);
+                    }
+                },
+                "/level": {
+                    name: "level",
+                    component : function(resolve){
+                       require(['./views/level.vue'],resolve);
+                    }
+                },
+                "/user": {
+                    name: "user",
+                    component : function(resolve){
+                       require(['./views/user.vue'],resolve);
+                    }
+                },
+                "/config": {
+                    name: "config",
+                    component : function(resolve){
+                       require(['./views/config.vue'],resolve);
+                    }
+                }
             }
         }
     })
