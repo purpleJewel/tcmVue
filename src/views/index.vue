@@ -1,27 +1,20 @@
 <template>
-    <!-- 全局header -->
-    <nav-header></nav-header>
+    <div></div>
 </template>
 <script>
     require('../assets/scss/iconfont/iconfont.css');
     require('../assets/scss/CV.scss');
-    require('../assets/scss/github-markdown.css');
 
 
     export default {
-        /*ready (){
+        ready (){
             setTimeout(() => {
-                // this.$route.router.go({ name: 'list'});
-            },2000);
-        }*/
-        components:{
-            navHeader: require("../components/header.vue")
+                this.$route.router.go({ name: 'line'});
+            },500);
         }
     }
 </script>
 <style lang="sass">
-    .index{
-        
-    }
+    
 </style>
 

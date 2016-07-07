@@ -2,8 +2,7 @@
 
 export default function(router){
     router.map({
-        '/':{				
-            name:'home',
+        '/': {				
             component: function(resolve){
                 require(['./views/index.vue'],resolve);
             }
@@ -14,41 +13,72 @@ export default function(router){
                 // require(['./views/index.vue'],resolve);
             }
         },
-        '/sys':{               
+        '/sys': {     
             component: function(resolve){
-                require(['./views/line.vue'],resolve);
+                require(['./views/index.vue'],resolve);
             },
             subRoutes: {
                 "/line": {
-                    name: "line",
-                    component : function(resolve){
-                       require(['./views/line.vue'],resolve);
+                    name: 'line',
+                    component: function(resolve){
+                       require(['./views/_sys/line.vue'],resolve);
                     }
                 },
                 "/role": {
                     name: "role",
-                    component : function(resolve){
-                       require(['./views/role.vue'],resolve);
+                    component: function(resolve){
+                       require(['./views/_sys/role.vue'],resolve);
                     }
                 },
                 "/level": {
                     name: "level",
-                    component : function(resolve){
-                       require(['./views/level.vue'],resolve);
+                    component: function(resolve){
+                       require(['./views/_sys/level.vue'],resolve);
                     }
                 },
                 "/user": {
                     name: "user",
-                    component : function(resolve){
-                       require(['./views/user.vue'],resolve);
+                    component: function(resolve){
+                       require(['./views/_sys/user.vue'],resolve);
                     }
                 },
                 "/config": {
                     name: "config",
-                    component : function(resolve){
-                       require(['./views/config.vue'],resolve);
+                    component: function(resolve){
+                       require(['./views/_sys/config.vue'],resolve);
                     }
                 }
+            }
+        },
+        '/device': {     
+            component: function(resolve){
+                require(['./views/index.vue'],resolve);
+            },
+            subRoutes: {
+                "/list": {
+                    name: 'list',
+                    component: function(resolve){
+                       // require(['./views/_sys/list.vue'],resolve);
+                    }
+                },
+                "/zone": {
+                    name: "zone",
+                    component: function(resolve){
+                       // require(['./views/_sys/zone.vue'],resolve);
+                    }
+                },
+                "/video": {
+                    name: "video",
+                    component: function(resolve){
+                       // require(['./views/_sys/video.vue'],resolve);
+                    }
+                }
+            }
+        },
+        '/store': {
+            name: 'store',
+            component: function(resolve){
+                require(['./views/index.vue']);
             }
         }
     })

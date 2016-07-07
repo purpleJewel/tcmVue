@@ -45,7 +45,8 @@ module.exports = {
         loaders: [{
             test: /\.vue$/,
             loader: 'vue-loader',
-        }, {
+        }, 
+        {
             test: /\.scss$/,
             loader: ExtractTextPlugin.extract(
                 "style-loader", 'css-loader?sourceMap!sass-loader!cssnext-loader')
@@ -59,7 +60,7 @@ module.exports = {
             loader: 'babel'
         },{
             test: /\.(jpg|png|gif)$/,
-            loader: "file-loader?name=images/[hash].[ext]"
+            loader: "url-loader?limit=8192&name=images/[name].[ext]"
         }, {
             test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
             loader: "url-loader?limit=10000&minetype=application/font-woff"

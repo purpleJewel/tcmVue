@@ -4,6 +4,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import filters from './filters';
 import routerConfig from './routers';
+import navHeader from './components/header.vue';
 
 Vue.use(VueRouter);
 
@@ -20,8 +21,13 @@ let router = new VueRouter({
     transitionOnLoad: true
 });
 
-let App = Vue.extend({});
+let App = Vue.extend({
+	components: {
+		navHeader
+	}
+});
 routerConfig(router);
+
 
 router.start(App, "#app");
 
