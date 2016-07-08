@@ -4,6 +4,8 @@ import sock from './sockjs.js';
 import stomp from './stomp.js';
 
 let IXW = {};
+let AjaxHT = new Map();
+let SocketHT = new Map();
 
 function _baseFailFn(data){
 	console.log(data);
@@ -29,18 +31,23 @@ IXW.ajax = (name, params, cbFn, failFn) => {
 	});
 };
 
-IXW.websocket = (name, params, cbFn, failFn) => {
-	// var ws = new SockJS(baseUrl);
-	// var client = Stomp.over(ws);
-	// client.connect({}, function(frame) {
- //        client.subscribe('/topic/greetings', function(greeting){
- //        	var str = document.getElementById("loginbox").innerHTML;
- //        	str += JSON.parse(greeting.body).content + '<br/>';
- //            document.getElementById("loginbox").innerHTML = str;
- //        });
- //    }, function(err) {
- //    	 alert(err);  
- //    });
+function _subscribe(client, arr) {
+	client.subscribe('/topic/greetings', function(greeting){
+    	
+    });
+}
+
+IXW.websocket = (arr) => {
+	let ws = new SockJS(TCM_BaseUrl);
+	let client = Stomp.over(ws);
+	client.connect({}, function(frame) {
+        _subscribe();
+    }, function(err) {
+    	if (failFn && typeof(failFn) === Function)
+    		return failFn(data.err);
+		_baseFailFn(data);
+    });
+    return client;
 };
 
 exports.ajax = IXW.ajax;
