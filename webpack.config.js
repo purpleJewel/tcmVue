@@ -60,7 +60,7 @@ module.exports = {
             loader: 'babel'
         },{
             test: /\.(jpg|png|gif)$/,
-            loader: "url-loader?limit=8192&name=images/[name].[ext]"
+            loader: "url-loader?name=images/[name].[ext]"
         }, {
             test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
             loader: "url-loader?limit=10000&minetype=application/font-woff"

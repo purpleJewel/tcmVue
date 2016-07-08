@@ -7,7 +7,7 @@
 			</a>
 			<ul class="sub" v-if="item[2] !== undefined">
 				<li id="nav-{{item[0]}}-{{sub[0]}}" class="{{routeSub == sub[0] ? 'active' : ''}}" v-for="sub of item[2]">
-					<a v-link="sub[0]" @click="clickLink(item[0], sub[0])">{{sub[1]}}</a>
+					<a v-link="sub[0]" @click="clickLink(item[0], sub[0])" v-text="sub[1]"></a>
 				</li>
 			</ul>
 		</li>
@@ -41,7 +41,7 @@
 			clickLink (sup, sub) {
 				this.routeSup = sup;
 				this.routeSub = sub;
-			}
+			},
 		}	
 	}
 </script>
@@ -63,7 +63,7 @@
         	box-shadow: inset 0 2px 5px 0 rgba(42, 51, 58, 0.75);height: 42px;padding: 1px 0;width: 100%;padding-left: 300px;
 			&>li{display: inline-block; height: 40px; overflow: hidden; line-height: 20px; text-align: center;}
 			& a{width: 120px; height: 40px; font-size: 12px; font-family: "宋体"; padding: 10px 0; display: block;
-				&:hover{background: #159fb6; box-shadow: inset 0 1px 1px 0px rgba(42, 51, 58, 0.75);}
+				&:hover{background: #159fb6 !important; box-shadow: inset 0 1px 1px 0px rgba(42, 51, 58, 0.75);}
 			}
 			.active a{
 				border-bottom: 3px solid #159fb6; background: #21272c;

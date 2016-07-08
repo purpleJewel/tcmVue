@@ -6,26 +6,34 @@
 			</div>
 			<nav-menu></nav-menu>
 			<ul class="navbar-right">
-				<li class="newSite">123</li>	
+				<li class="newSite">{{siteName}}</li>	
 				<li class="current-user">
 					<span class="sp"></span>
 					<span class="user-pic"></span>
-					<span>admin</span>
+					<span>{{userName}}</span>
 				</li>	
 				<li class="logout">
 					<span class="sp"></span>
-					<a href="#" @click="logout">退出</a>
+					<a class="btn" @click="logout">退出</a>
 				</li>	
 			</ul>
 		</div>
 	</nav>
+	<div class="bg"></div>
 </template>
 <script>
 	import navMenu from './menu.vue';
 	export default {
+		data () {
+			return {
+				siteName: localStorage.siteName || '',
+				userName: localStorage.userName || ''
+			};
+		},
 		methods: {
 			logout () {
 				alert('logout!');
+				this.$route.router.go({ name: 'entry'});
 			}
 		},
 		components: {
@@ -34,6 +42,7 @@
 	}
 </script>
 <style lang="sass">
+	.bg{position: fixed; left: 0; top: 0; right: 0; bottom: 0; z-index: -5000;}
 	.navbar{
 	    height: 50px; background: #2a333a;
 	}
