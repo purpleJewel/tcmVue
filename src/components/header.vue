@@ -23,26 +23,38 @@
 </template>
 <script>
 	import navMenu from './menu.vue';
+
 	export default {
 		data () {
 			return {
-				siteName: localStorage.siteName || '',
-				userName: localStorage.userName || ''
+				userName: localStorage.userName,
+				siteName: localStorage.siteName
 			};
 		},
 		methods: {
 			logout () {
-				alert('logout!');
-				this.$route.router.go({ name: 'entry'});
+				// alert('logout!');
+				for (let key in localStorage) {
+					localStorage.removeItem(key);
+				}
+				TCM.Global.common('logout', {}, () => {
+					this.$route.router.go({ name: 'entry'});
+				});
 			}
 		},
 		components: {
 			navMenu
+		},
+		ready () {
+			var self = this;
+			globalBus.on('getSession', function(data){
+				self.userName = data.userName;
+				self.siteName = data.siteName;
+			});
 		}
 	}
 </script>
 <style lang="sass">
-	.bg{position: fixed; left: 0; top: 0; right: 0; bottom: 0; z-index: -5000;}
 	.navbar{
 	    height: 50px; background: #2a333a;
 	}

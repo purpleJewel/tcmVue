@@ -1,4 +1,5 @@
 .entry{
+	.bg {background: url(../../assets/images/bg/entrybg.png) no-repeat 0 0; display: block;}
 	.container{position:absolute; left: 215px; bottom: 300px;
 		.pic_top{min-width:736px;}
 		.pic_char{width:612px; height:90px; margin-left:20px; vertical-align:top; background: url(../images/logo/entry-logo.png) no-repeat 0 0;}
@@ -24,7 +25,7 @@
 	.submit:hover{background: url(../images/pic/entry-btn-hover.png) no-repeat 0 0;}
 
 	.footer{
-		width: 100%; height: 56px; position: fixed; bottom: 0; z-index: 2; text-align: center;
-		.footer-bar {display:block;height:56px;width:360px;margin:0 auto; }
+		width: 100%; height: 56px; position: fixed; bottom: 0; z-index: 2; text-align: center; background: url(../images/bg/entry-foot-bg.png) repeat-x;
+		.footer-bar {display:block; height:56px; width:360px; margin:0 auto; background: url(../images/logo/entry-foot.png) no-repeat;}
 	}
 }

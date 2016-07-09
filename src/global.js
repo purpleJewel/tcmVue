@@ -1,17 +1,26 @@
 'use strict'
+//注册接口数据：接口名、回调函数。
 
 window.TCM = {};
 TCM.Global = {};
 
-import commnication from './libs/commnication.js';
+// import commnication from './libs/commnication.js';
 
 TCM.Global.common = (name, params, cbFn, failFn) => {
 	switch (name) {
 		case 'login':
-			cbFn(setTimeout(() => {console.log('login');}, 200));
+			/**
+			 * 登录系统
+			 * @param  {userName, password} ( [description]
+			 * @return {userName, userId, siteId, siteName}   [description]
+			 */
+			setTimeout(() => {cbFn(Test.login(params));}, 200);
 			break;
 		case 'logout':
-			cbFn(setTimeout(() => {console.log('logout');}, 200));
+			setTimeout(() => {cbFn(Test.logout(params));}, 200);
 			break;
+		// case 'getSession':
+		// 	setTimeout(() => {cbFn(Test.getSession(params));}, 200);
+		// 	break;
 	}
 };

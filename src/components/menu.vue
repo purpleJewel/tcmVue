@@ -7,7 +7,7 @@
 			</a>
 			<ul class="sub" v-if="item[2] !== undefined">
 				<li id="nav-{{item[0]}}-{{sub[0]}}" class="{{routeSub == sub[0] ? 'active' : ''}}" v-for="sub of item[2]">
-					<a v-link="sub[0]" @click="clickLink(item[0], sub[0])" v-text="sub[1]"></a>
+					<a v-link="{name: sub[0]}" @click="clickLink(item[0], sub[0])" v-text="sub[1]"></a>
 				</li>
 			</ul>
 		</li>

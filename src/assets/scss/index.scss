@@ -1,5 +1,6 @@
-.line, .role, .level, .user, .config, .list, .zone, .video, .store{
+.home, .line, .role, .level, .user, .config, .list, .zone, .video, .store{
     .navbar, .bg{display: block;}
     .bg{background: url(../images/bg/bg.png) no-repeat 0 0;}
 }
 .navbar, .bg{display: none;}
+.bg{position: fixed; left: 0; top: 0; right: 0; bottom: 0; z-index: -5000;}

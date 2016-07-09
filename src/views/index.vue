@@ -6,14 +6,10 @@
     require('../assets/scss/CV.scss');
 
     export default {
-        ready (){
+        ready () {
             setTimeout(() => {
                 this.$route.router.go({name: 'line'});
             }, 0);
         }
     }
 </script>
-<style lang="sass">
-
-</style>
-

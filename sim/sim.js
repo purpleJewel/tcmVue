@@ -1,15 +1,16 @@
 (function(window){
 window.Test = {};
-Test.login = function(params){
-	if (localStorage.userId) return;
-	localStorage.setItem('userName', params.userName);
-	localStorage.setItem('userId', 1);
-	localStorage.setItem('setName', "望京");
+let session = {};
+Test.login = (params) => {
+	session.siteName = '望京';
+	session.siteId = 1;
+	session.userName = params.userName;
+	session.userId = 1;
+	return session;
 };
-Test.logout = function(){
-	for (let key in localStorage) {
-		localStorage.removeItem(key);
-	}
+Test.logout = () => {
+	session = {};
 };
+
 
 })(window);
