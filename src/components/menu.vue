@@ -1,17 +1,17 @@
 <template>
-	<ul class="nav navbar-nav main">
-		<li id="nav-{{item[0]}}" class="{{routeSup == item[0] ? 'active': ''}}" v-for="item of navItems">
-			<a v-link="{name: item[2] ? item[2][0][0] : item[0]}" @click="clickLink(item[0], item[2] ? item[2][0][0] : '')">
-				<span class="nav-{{item[0]}} "></span>
-				<span>{{item[1]}}</span>
-			</a>
-			<ul class="sub" v-if="item[2] !== undefined">
-				<li id="nav-{{item[0]}}-{{sub[0]}}" class="{{routeSub == sub[0] ? 'active' : ''}}" v-for="sub of item[2]">
-					<a v-link="{name: sub[0]}" @click="clickLink(item[0], sub[0])" v-text="sub[1]"></a>
-				</li>
-			</ul>
-		</li>
-	</ul>
+<ul class="nav navbar-nav main">
+	<li id="nav-{{item[0]}}" class="{{routeSup == item[0] ? 'active': ''}}" v-for="item of navItems">
+		<a v-link="{name: item[2] ? item[2][0][0] : item[0]}" @click="clickLink(item[0], item[2] ? item[2][0][0] : '')">
+			<span class="nav-{{item[0]}} "></span>
+			<span>{{item[1]}}</span>
+		</a>
+		<ul class="sub" v-if="item[2] !== undefined">
+			<li id="nav-{{item[0]}}-{{sub[0]}}" class="{{routeSub == sub[0] ? 'active' : ''}}" v-for="sub of item[2]">
+				<a v-link="{name: sub[0]}" @click="clickLink(item[0], sub[0])" v-text="sub[1]"></a>
+			</li>
+		</ul>
+	</li>
+</ul>
 </template>																
 <script>
 	export default {

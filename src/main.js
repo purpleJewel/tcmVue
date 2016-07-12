@@ -2,15 +2,16 @@
 
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import filters from './filters';
+import store from './vuex/store.js';
 import routerConfig from './routers';
-import server from './libs/eventemitter.js';
+import filters from './filters';
+import {globalBus, eventBus} from './libs/eventemitter.js';
 import navHeader from './components/header.vue';
 import global from './global.js';
 
 //定义全局事件对象
-window.globalBus = server.globalBus; //全局公用事件
-window.eventBus = server.eventBus;   //单页面内部事件
+window.globalBus = globalBus; //全局公用事件
+window.eventBus = eventBus;   //单页面内部事件
 
 Vue.use(VueRouter);
 
@@ -45,6 +46,9 @@ router.beforeEach((transition) => {
 router.afterEach((transition) => {
     //路由跳转时，清空单页面注册事件
     eventBus.removeAllListeners();
+    //进入entry界面之前，取消动画效果
+    if (transition.to.name === 'entry')
+        $('#body').removeClass('fade-transition');
 	$('body').removeClass().addClass(transition.to.name);
 });
 
@@ -58,6 +62,7 @@ $document.on('keyup', function(event) {
 });
 
 let App = Vue.extend({
+    store,
 	components: {
 		navHeader
 	}

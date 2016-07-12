@@ -12,7 +12,7 @@ TCM.Global.common = (name, params, cbFn, failFn) => {
 			/**
 			 * 登录系统
 			 * @param  {userName, password} ( [description]
-			 * @return {userName, userId, siteId, siteName}   [description]
+			 * @return {siteId, siteName, siteType, userName, userId, userType, lineName}   [description]
 			 */
 			setTimeout(() => {cbFn(Test.login(params));}, 200);
 			break;

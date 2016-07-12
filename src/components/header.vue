@@ -1,49 +1,66 @@
 <template>
-	<nav class="navbar">
-		<div class="container-fluid">
-			<div class="nav navbar-header">
-				<a href="#"><span class="nav-logo"></span></a>
-			</div>
-			<nav-menu></nav-menu>
-			<ul class="navbar-right">
-				<li class="newSite">{{siteName}}</li>	
-				<li class="current-user">
-					<span class="sp"></span>
-					<span class="user-pic"></span>
-					<span>{{userName}}</span>
-				</li>	
-				<li class="logout">
-					<span class="sp"></span>
-					<a class="btn" @click="logout">退出</a>
-				</li>	
-			</ul>
+<nav class="navbar">
+	<div class="container-fluid">
+		<div class="nav navbar-header lt">
+			<a href="#"><span class="nav-logo"></span></a>
 		</div>
-	</nav>
-	<div class="bg"></div>
+		<nav-menu></nav-menu>
+		<ul class="navbar-right rt">
+			<li class="newSite">{{siteName}}</li>	
+			<li class="current-user">
+				<span class="sp"></span>
+				<span class="user-pic"></span>
+				<span>{{userName}}</span>
+			</li>	
+			<li class="logout">
+				<span class="sp"></span>
+				<a class="btn" @click="logout">退出</a>
+			</li>	
+		</ul>
+	</div>
+</nav>
+<nv-confirm :show="confirm.show" :content="confirm.txt"></nv-confirm>
+<div class="bg"></div>
 </template>
 <script>
 	import navMenu from './menu.vue';
+	import nvConfirm from '../components/nvConfirm.vue';
 
 	export default {
 		data () {
 			return {
 				userName: localStorage.userName,
-				siteName: localStorage.siteName
+				siteName: localStorage.siteName,
+				confirm: {
+					txt: '',
+					show: false
+				}
 			};
 		},
 		methods: {
 			logout () {
-				// alert('logout!');
-				for (let key in localStorage) {
-					localStorage.removeItem(key);
+				var self = this;
+				self.confirm.show = true;
+				self.confirm.txt = '确定退出系统？';
+			}
+		},
+		events: {
+			confirmChoose (data) {
+				var self = this;
+				self.confirm.show = false;
+				if (data) {
+					for (let key in localStorage) {
+						localStorage.removeItem(key);
+					}
+					TCM.Global.common('logout', {}, () => {
+						this.$route.router.go({ name: 'entry'});
+					});
 				}
-				TCM.Global.common('logout', {}, () => {
-					this.$route.router.go({ name: 'entry'});
-				});
 			}
 		},
 		components: {
-			navMenu
+			navMenu,
+			nvConfirm
 		},
 		ready () {
 			var self = this;
@@ -59,18 +76,19 @@
 	    height: 50px; background: #2a333a;
 	}
 	.container-fluid{min-width: 1050px; padding: 0 20px;
-	    .nav{float: left;}
 	    .navbar-header{
 	        width: 280px; height: 50px; display: inline-block;
 	    }
 	    .nav-logo{
 	        width: 238px; height: 28px; margin: 11px 0; display: inline-block; background: url(../assets/images/logo/logo.png) no-repeat 0 0;
 	    }
-	    .navbar-right{float: right;
-			&>li{float: left; color: #fff;}
+	    .navbar-right{
+			&>li{color: #fff; float: left;}
 			a{color: #fff;}
+			.current-user span{display: inline-block; vertical-align: top;}
 			.newSite,.current-user,.logout{padding: 15px 0 0 20px; height: 50px;}
-			.sp{width: 2px; border-left: 1px solid #22272b; border-right: 1px solid #3a4249; height: 30px; margin-right: 10px;} 
+			.user-pic{background: url(../assets/images/pic/avatar.png) no-repeat; width: 20px; height: 24px; margin: -5px 10px 0 0;}
+			.sp{width: 2px; border-left: 1px solid #22272b; border-right: 1px solid #3a4249; height: 24px; margin: -5px 10px 0 0; display: inline-block; vertical-align: top;}
 	    }
 	}
 </style>
