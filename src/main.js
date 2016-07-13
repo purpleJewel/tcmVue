@@ -2,8 +2,8 @@
 
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import store from './vuex/store.js';
 import routerConfig from './routers';
+import store from './vuex/store.js';
 import filters from './filters';
 import {globalBus, eventBus} from './libs/eventemitter.js';
 import navHeader from './components/header.vue';
