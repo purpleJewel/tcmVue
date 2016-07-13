@@ -100,3 +100,7 @@ exports.getTitleStr = tab => {
     }
     return str;
 }
+
+exports.getGridValue = (value, key, clz) => {
+    return value;
+}

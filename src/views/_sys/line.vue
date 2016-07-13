@@ -17,15 +17,38 @@
 			</div>
 		</div>
 	</div>
-	<div id="sysline-grid"></div>
+	<div id="sysline-grid">
+		<base-grid 
+			:clz="grid.clz" 
+			:has-checkbox="grid.hasCheckbox"
+			:headers="grid.headers" 
+			:columns="grid.columns" 
+			:items="grid.items" 
+			:actions="grid.actions"
+		></base-grid>
+	</div>
 </div>
 </template>
 <script>
+	import baseGrid from '../../components/grid/baseGrid.vue';
+
 	export default {
 		data () {
 			return {
 				lineName: localStorage.lineName,
-				siteName: localStorage.siteName
+				siteName: localStorage.siteName,
+				grid: {
+					clz: 'sys-line',
+					hasCheckbox: true,
+					headers: ['名字', '标题'],
+					columns: ['name', 'title'],
+					items: [],
+					actions: {
+						edit: (item) => {
+							console.log(item.id);
+						}
+					}
+				}
 			};
 		},
 		methods: {
@@ -33,8 +56,14 @@
 				alert('setSiteName');
 			}
 		},
+		components: {
+			baseGrid
+		},
 		ready () {
-			
+			let _self = this;
+			TCM.Global.sysCaller('getAllSites', {}, (result) => {
+				_self.grid.items = result;	
+			});
 		}
 	}
 </script>

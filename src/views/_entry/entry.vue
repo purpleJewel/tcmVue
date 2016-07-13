@@ -28,16 +28,16 @@
 		},
 		methods: {
 			login () {
-				var self = this;
-				var account = self.account.trim();
-				var password = self.password.trim();
+				let _self = this;
+				let account = _self.account.trim();
+				let password = _self.password.trim();
 				if (!(account && password)) {
-					self.alert.show = true;
-					self.alert.txt = '账号/密码不能为空';
+					_self.alert.show = true;
+					_self.alert.txt = '账号/密码不能为空';
 					return;
 				}
 				TCM.Global.common('login', {userName: account, password: password}, (result) => {
-					self.$route.router.go({name: "line"});
+					_self.$route.router.go({name: "line"});
 					if (localStorage.length === 0) {
 						for (let key in result) {
 							localStorage.setItem(key, result[key]);
@@ -49,8 +49,8 @@
 		},
 		events: {
 			show (data) {
-				var self = this;
-				self.alert.show = data;
+				let _self = this;
+				_self.alert.show = data;
 			}
 		},
 		components: {

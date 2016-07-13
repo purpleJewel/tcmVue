@@ -39,15 +39,15 @@
 		},
 		methods: {
 			logout () {
-				var self = this;
-				self.confirm.show = true;
-				self.confirm.txt = '确定退出系统？';
+				let _self = this;
+				_self.confirm.show = true;
+				_self.confirm.txt = '确定退出系统？';
 			}
 		},
 		events: {
 			confirmChoose (data) {
-				var self = this;
-				self.confirm.show = false;
+				let _self = this;
+				_self.confirm.show = false;
 				if (data) {
 					for (let key in localStorage) {
 						localStorage.removeItem(key);
@@ -63,10 +63,10 @@
 			nvConfirm
 		},
 		ready () {
-			var self = this;
+			let _self = this;
 			globalBus.on('getSession', function(data){
-				self.userName = data.userName;
-				self.siteName = data.siteName;
+				_self.userName = data.userName;
+				_self.siteName = data.siteName;
 			});
 		}
 	}
