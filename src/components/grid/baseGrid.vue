@@ -1,8 +1,14 @@
 <template>
-<div class="base-grid {{clz}}">
+<div class="base-grid">
 	<ul class="hdr">
 		<li class="col-_check" v-if="hasCheckbox">
 			<checkbox :check-fn="checkFn" :selected="rootSelected" key="root"></checkbox>
+		</li>
+		<li class="col-_no" v-if="sequence">
+			<a data-key="_no">
+				<span>{{sequence}}</span>
+				<span class="pic-hide"></span>
+			</a>
 		</li>
 		<li class="col-{{col}}" v-for="col of columns">
 			<a data-key="{{col}}">
@@ -16,6 +22,7 @@
 			<li class="col-_check" v-if="hasCheckbox">
 				<checkbox :check-fn="checkFn" :selected="selected" :key="item.id"></checkbox>
 			</li>
+			<li class="col-_no" v-if="sequence">{{$index}}</li>
 			<li class="col-{{key}}" v-for="key of columns">{{item[key] | getGridValue key clz}}</li>
 			<li class="rt col-actions">
 				<a class="btn act-{{$key}}" v-for="fn of actions" @click="fn(item)">{{$key}}</a>
@@ -30,7 +37,7 @@
 	 * params: {
 	 * 		clz,				//表格class
 	 * 		hasCheckbox,		//是否显示checkbox
-	 * 		selectArr,			//checkbox选中列id数组
+	 * 		sequence,			//显示序号名
 	 * 		headers: [],		//对应columns的显示
 	 * 		columns: [],		//表格显示列
 	 * 		items: [			//表格显示数据
@@ -44,7 +51,7 @@
 	 * }
 	 */
 	export default {
-		props: ['clz', 'hasCheckbox', 'selectArr', 'headers', 'columns', 'items', 'actions'],
+		props: ['clz', 'hasCheckbox', 'sequence', 'headers', 'columns', 'items', 'actions'],
 		data () {
 			let _self = this;
 			return {
@@ -62,6 +69,7 @@
 						_self.$nextTick(() => {
 							_self.selected = isSelected;
 						});
+						this.$dispatch('check-box', _self.selectArr);
 						return;
 					}
 					if (isSelected) {
@@ -75,6 +83,7 @@
 						_self.rootSelected = isSelected;
 					if (_self.selectArr.length === 0)
 						_self.selected = isSelected;
+					this.$dispatch('check-box', _self.selectArr);
 				}
 			};
 		},
@@ -95,6 +104,13 @@
 				color: #333333;
 				font-weight: bold;
 			}
+			.col-_no{
+				text-align: right;
+			}
+			[class^="col-"] {
+				border-right: 1px solid #fff;
+				height: 30px;
+			}
 		}
 		[class^="col-"] {
 			display: inline-block;
@@ -105,16 +121,37 @@
 			line-height: 35px;
 			padding: 0px 8px;
 		}
+		.col-_check{
+			min-width: 20px;
+		}
 		.t-body{
 			background: #fff;
+			.row:nth-child(even) {
+				background: #f2f2f2;
+			}
+			.row{
+				border: 1px solid transparent;
+				&:hover{
+					background: rgba(97, 212, 255, 0.5);
+					color: #fff;
+					border: 1px solid #00BDFE;
+					.col-actions{
+						display: block;
+					}
+				}
+			}
 		}
 		.col-actions{
 			line-height: 30px;
 			text-align: center;
+			display: none;
 			width: 10%;
 			padding: 0 10px;
 			.btn{
 				margin-right: 10px;
+				&:hover{
+					color: #000;
+				}
 			}
 		}
 	}

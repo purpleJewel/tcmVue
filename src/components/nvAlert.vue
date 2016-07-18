@@ -2,7 +2,9 @@
 	<div class="alert-mask" v-show="show" transition="fade">
 		<div class="nv-alert-inner">
 			<div v-text="content"></div>
-			<div class="close"><a @click="close">X</a></div>
+			<button type="button" class="close" @click="close">
+			  <span>&times;</span>
+			</button>
 		</div>
 	</div>
 </template>
@@ -42,8 +44,8 @@
 		transition: all .3s ease;
 		.close{
 			position: absolute;
-		    right: 5px;
-		    top: 5px;
+		    right: 10px;
+		    top: 18px;
 		    width: 20px;
 		    height: 20px;
 		    a{

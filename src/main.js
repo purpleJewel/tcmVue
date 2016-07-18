@@ -7,6 +7,7 @@ import store from './vuex/store.js';
 import filters from './filters';
 import {globalBus, eventBus} from './libs/eventemitter.js';
 import navHeader from './components/header.vue';
+import EventListener from './libs/EventListener.js';
 import global from './global.js';
 
 //定义全局事件对象
@@ -53,9 +54,7 @@ router.afterEach((transition) => {
 });
 
 //全局绑定a标签Enter键触发其click事件
-var $document = $(document);
-$document.off();
-$document.on('keyup', function(event) {
+let documentClick = EventListener.listen(document, 'keyup', (e)=> {
     event.preventDefault();
     if (event.key == 'Enter')
         $('a.Enter').click();

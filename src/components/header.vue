@@ -19,7 +19,7 @@
 		</ul>
 	</div>
 </nav>
-<nv-confirm :show="confirm.show" :content="confirm.txt"></nv-confirm>
+<nv-confirm :show="confirm.show" :content="confirm.txt" @confirm-choose="confirmChoose"></nv-confirm>
 <div class="bg"></div>
 </template>
 <script>
@@ -42,9 +42,7 @@
 				let _self = this;
 				_self.confirm.show = true;
 				_self.confirm.txt = '确定退出系统？';
-			}
-		},
-		events: {
+			},
 			confirmChoose (data) {
 				let _self = this;
 				_self.confirm.show = false;

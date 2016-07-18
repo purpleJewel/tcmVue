@@ -18,35 +18,60 @@
 		</div>
 	</div>
 	<div id="sysline-grid">
-		<base-grid 
+		<grid 
 			:clz="grid.clz" 
+			:title="grid.title"
 			:has-checkbox="grid.hasCheckbox"
+			:sequence="grid.sequence"
+			:search="grid.search"
 			:headers="grid.headers" 
 			:columns="grid.columns" 
 			:items="grid.items" 
+			:tools="grid.tools"
+			:params="grid.params"
+			:get-data="grid.getData"
 			:actions="grid.actions"
-		></base-grid>
+		></grid>
 	</div>
 </div>
 </template>
 <script>
-	import baseGrid from '../../components/grid/baseGrid.vue';
+	import grid from '../../components/grid/grid.vue';
+	import nvConfirm from '../../components/nvConfirm.vue';
 
 	export default {
 		data () {
+			let _self = this;
 			return {
 				lineName: localStorage.lineName,
 				siteName: localStorage.siteName,
 				grid: {
 					clz: 'sys-line',
+					title: '线路和车站管理',
 					hasCheckbox: true,
-					headers: ['名字', '标题'],
-					columns: ['name', 'title'],
+					sequence: '编号',
+					search: true,
+					headers: ['名字', '类型', 'IP地址'],
+					columns: ['name', 'type', 'ip'],
 					items: [],
+					params: {},
+					tools: {
+						deleted: (arr, cbFn) => {
+							cbFn();
+						}
+					},
 					actions: {
 						edit: (item) => {
 							console.log(item.id);
+						},
+						update: (item) => {
+							console.log(item);
 						}
+					},
+					getData (params) {
+						TCM.Global.sysCaller('getAllSites', _.merge(_self.grid.params, params), (result) => {
+							_self.grid.items = result;	
+						});
 					}
 				}
 			};
@@ -57,24 +82,22 @@
 			}
 		},
 		components: {
-			baseGrid
+			grid,
+			nvConfirm
 		},
 		ready () {
-			let _self = this;
-			TCM.Global.sysCaller('getAllSites', {}, (result) => {
-				_self.grid.items = result;	
-			});
+
 		}
 	}
 </script>
 <style lang="sass">
 	#body{
 		margin-top: 30px;
+	}
+	.sys-info{
 		input{
 			text-indent: 10px;
 		}
-	}
-	.sys-info{
 		height: 140px;
 		.line-name, .site-name{
 			width: 230px;
@@ -114,6 +137,11 @@
 					background-image: url(../../assets/images/pic/site-set-hover.png);
 				}
 			}
+		}
+	}
+	.sys-line{
+		.col-name, .col-type, .col-ip{
+			width: 20%;
 		}
 	}
 </style>

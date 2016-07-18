@@ -15,7 +15,7 @@
 		props: ['content', 'show'],
 		methods: {
 			choose (data) {
-				this.$dispatch('confirmChoose', data);
+				this.$dispatch('confirm-choose', data);
 			}
 		}
 	}
