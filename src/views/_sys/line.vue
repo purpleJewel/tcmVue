@@ -39,6 +39,16 @@
 	import grid from '../../components/grid/grid.vue';
 	import nvConfirm from '../../components/nvConfirm.vue';
 
+	let header = ['标识号','名字', '类型', 'IP地址', '说明'];
+	let columns = ['id','name', 'type', 'ip', 'desc'];
+	let tools = {
+
+	};
+	if (window.PTSD) {
+		header = ['标识号','名字', '类型', 'IP地址', '管辖状态', '说明'];
+		columns = ['id','name', 'type', 'ip', 'selected', 'desc'];
+	}
+
 	export default {
 		data () {
 			let _self = this;
@@ -53,8 +63,8 @@
 					paginative: false,
 					datePicker: false,
 					search: false,
-					headers: ['标识号','名字', '类型', 'IP地址', '说明'],
-					columns: ['id','name', 'type', 'ip', 'desc'],
+					headers: header,
+					columns: columns,
 					tools: {
 						refresh: (selectArr, cbFn) => {
 							cbFn();
@@ -71,7 +81,7 @@
 						}
 					},
 					getData (params, cbFn) {
-						TCM.Global.sysCaller('getAllSites', _.merge({s: 1}, params), cbFn);
+						TCM.Global.sysCaller('getAllSites', _.merge({}, params), cbFn);
 					}
 				}
 			};
@@ -143,8 +153,17 @@
 		.col-name, .col-type, .col-ip, .col-desc{
 			width: 18%;
 		}
+		.col-selected{
+			width: 5%;
+		}
 		.v-body{
 			border-radius: 0 0 5px 5px;
+		}
+		.tick{
+			width: 11px;
+    		height: 9px;
+    		display: inline-block;
+    		background: url(../../assets/images/pic/tick.png);
 		}
 	}
 	#sysline-grid{

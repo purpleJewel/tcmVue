@@ -14,7 +14,7 @@
 </template>
 <script>
 	import nvAlert from '../../components/nvAlert.vue';
-	
+
 	export default {
 		data () {
 			return {

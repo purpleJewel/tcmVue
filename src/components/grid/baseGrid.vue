@@ -23,7 +23,7 @@
 				<checkbox :check-fn="checkFn" :selected="selected" :key="item.id"></checkbox>
 			</li>
 			<li class="col-_no" v-if="sequence">{{$index}}</li>
-			<li class="col-{{key}}" v-for="key of columns">{{item[key] | getGridValue key clz}}</li>
+			<li class="col-{{key}}" v-for="key of columns">{{{item[key] | getGridValue key clz}}}</li>
 			<li class="rt col-actions">
 				<a class="btn act-{{$key}}" v-for="fn of actions" @click="fn(item)">{{$key}}</a>
 			</li>

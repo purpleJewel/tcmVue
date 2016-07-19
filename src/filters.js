@@ -28,6 +28,9 @@ exports.getGridValue = (value, key, clz) => {
             case 'type':
                 return TcmConst.SiteTypeNames[value];
                 break;
+            case 'selected':
+                return value ? '<span class="tick"></span>' : '';
+                break;
             default:
                 return value;
                 break;

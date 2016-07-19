@@ -2,13 +2,15 @@ import Const from '../src/libs/const.js';
 
 window.Test = {};
 let session = {};
+const siteType = 6;
+const userType = 1;
 Test.login = (params) => {
 	session.siteName = '望京';
 	session.siteId = 1;
-	session.siteType = 2;
+	session.siteType = siteType;
 	session.userName = params.userName;
 	session.userId = 1;
-	session.userType = 2;
+	session.userType = userType;
 	session.lineName = '15号线';
 	return session;
 };

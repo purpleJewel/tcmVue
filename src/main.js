@@ -8,6 +8,7 @@ import filters from './filters';
 import {globalBus, eventBus} from './libs/eventemitter.js';
 import navHeader from './components/header.vue';
 import EventListener from './libs/EventListener.js';
+import Const from './libs/const.js';
 import global from './global.js';
 
 //定义全局事件对象
@@ -31,6 +32,15 @@ let router = new VueRouter({
 
 //登录中间验证，页面需要登录而没有登录的情况直接跳转登录
 router.beforeEach((transition) => {
+    //window中存项目站点权限和用户权限
+    if (!window.OCC && localStorage.length > 0 && localStorage.siteType == Const.SiteTypes.OCC)
+        window.OCC = true;    
+    if (!window.PTSD && localStorage.length > 0 && localStorage.siteType == Const.SiteTypes.PTSD)
+        window.PTSD = true;
+    if (!window.Super && localStorage.length > 0 && localStorage.userType == Const.UserTypes.Super)
+        window.Super = true;
+    if (!window.Admin && localStorage.length > 0 && localStorage.userType == Const.UserTypes.Admin)
+        window.Admin = true;
     if (transition.to.name === "entry" && localStorage.userId) 
         transition.redirect('/');
     if (transition.to.auth) {
