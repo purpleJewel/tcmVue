@@ -71,7 +71,7 @@
 </script>
 <style lang="sass">
 	.navbar{
-	    height: 50px; background: #2a333a;
+	    height: 50px; background: #2a333a; z-index: 2000;
 	}
 	.container-fluid{min-width: 1050px; padding: 0 20px;
 	    .navbar-header{

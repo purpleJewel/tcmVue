@@ -98,5 +98,8 @@ var Sites = [].concat(
 );
 
 Test.getAllSites = () => {
-	return Sites;
+	return {
+		total: Sites.length,
+		data: Sites
+	};
 }

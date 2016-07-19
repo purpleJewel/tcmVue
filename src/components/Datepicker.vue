@@ -23,6 +23,20 @@
             <span v-for="d in dateRange" v-bind:class="d.sclass" @click.stop="daySelect(d.date,this)">{{d.text}}</span>
           </div>
         </div>
+        <div class="datepicker-time">
+        	时间：<input type="text" v-model="hour" @keyup="timeKey(23)" @focus="focus = 'hour'"> :
+        	<input type="text"  v-model="minute" @keyup="timeKey(59)" @focus="focus = 'minute'"> :
+        	<input type="text" v-model="second" @keyup="timeKey(59)" @focus="focus = 'second'"> 
+        	<!-- <span class="icons">
+        		<a @click="changeTime(1)">
+        			<span class="dt-prev"></span>
+        		</a>
+        		<a @click="changeTime(-1)">
+        			<span class="dt-next"></span>
+        		</a>
+        	</span> -->
+        	<button class="ok" @click="checkDate">确定</button>
+        </div>
       </div>
     </div>
     <div class="datepicker-popup" v-show="displayMonthView">
@@ -36,8 +50,7 @@
           <div class="datepicker-monthRange">
             <template v-for="m in monthNames">
               <span   v-bind:class="{'datepicker-dateRange-item-active':
-                  (this.monthNames[this.parse(this.value).getMonth()]  === m) &&
-                  this.currDate.getFullYear() === this.parse(this.value).getFullYear()}"
+                  (this.monthNames[this.parse(this.currDate).getMonth()]  === m)}"
                   @click="monthSelect($index)"
                 >{{m.substr(0,3)}}</span>
             </template>
@@ -56,7 +69,7 @@
           <div class="datepicker-monthRange decadeRange">
             <template v-for="decade in decadeRange">
               <span v-bind:class="{'datepicker-dateRange-item-active':
-                  this.parse(this.value).getFullYear() === decade.text}"
+                  this.parse(this.currDate).getFullYear() === decade.text}"
                   @click.stop="yearSelect(decade.text)"
                 >{{decade.text}}</span>
             </template>
@@ -71,12 +84,16 @@
 import EventListener from '../libs/EventListener.js';
 export default {
   props: {
+  	key: {
+  		type: null,
+  		default: 'time'
+  	},
     value: {
       type: String,
       twoWay: true
     },
     format: {
-      default: 'MMMM/dd/yyyy'
+      default: 'yyyy-MM-dd hh:mm:ss'
     },
     disabledDaysOfWeek: {
       type: Array,
@@ -86,7 +103,7 @@ export default {
     },
     width: {
       type: String,
-      default: '200px'
+      default: '180px'
     },
     showResetButton: {
       type: Boolean,
@@ -95,20 +112,29 @@ export default {
   },
   data() {
     return {
-      weekRange: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+      weekRange: ['日', '一', '二', '三', '四', '五', '六'],
       dateRange: [],
       decadeRange: [],
       currDate: new Date,
+      hour: '00',
+      minute: '00',
+      second: '00',
+      focus: '',
       displayDayView: false,
       displayMonthView: false,
       displayYearView: false,
       monthNames: [
-        'January', 'February', 'March',
-        'April', 'May', 'June',
-        'July', 'August', 'September',
-        'October', 'November', 'December'
+        '一月', '二月', '三月',
+        '四月', '五月', '六月',
+        '七月', '八月', '九月',
+        '十月', '十一月', '十二月'
       ]
     }
+  },
+  computed: {
+  	time () {
+  		return this.hour + ':' + this.minute + ':' + this.second;
+  	}
   },
   watch: {
     currDate() {
@@ -127,7 +153,35 @@ export default {
       }
     },
     inputKeydown() {
-      event.returnValue = false;
+      event.returnValue = false
+    },
+    setTime (data) {
+  		const year = this.currDate.getFullYear()
+  		const months = this.currDate.getMonth()
+  		const date = this.currDate.getDate()
+  		const hour = this.hour
+  		const minute = this.minute
+  		const second = this.second
+  		if (this.focus == 'hour')
+  			this.currDate = new Date(year, months, date, data || hour, minute, second)
+  		else if (this.focus == 'minute')
+  			this.currDate = new Date(year, months, date, hour, data || minute, second)
+  		else
+  			this.currDate = new Date(year, months, date, hour, minute, data || second)
+    },
+    timeKey (max) {
+  		const value = event.target.value
+  		if (!Number(value))
+  			event.returnValue = false
+  		const data = Math.min(Number(value), max)
+  		event.target.value = ('0' + data).slice(-2)
+  		this.setTime(data)
+    },
+    checkDate () {
+    	this.setTime()
+    	this.value = this.stringify(this.currDate)
+    	this.$dispatch('check-date', this.key, this.value);
+    	this.displayDayView = false
     },
     preNextDecadeClick(flag) {
       const year = this.currDate.getFullYear()
@@ -170,9 +224,7 @@ export default {
       if (el.$el.classList[0] === 'datepicker-item-disable') {
         return false
       } else {
-        this.currDate = date
-        this.value = this.stringify(this.currDate)
-        // this.displayDayView = false
+        this.currDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), this.hour, this.minute, this.second);
       }
     },
     switchMonthView() {
@@ -217,24 +269,22 @@ export default {
       const year = date.getFullYear()
       const month = date.getMonth() + 1
       const day = date.getDate()
+      const hour = date.getHours()
+      const minute = date.getMinutes()
+      const second = date.getSeconds()
       const monthName = this.parseMonth(date)
       return format
       .replace(/yyyy/g, year)
-      .replace(/MMMM/g, monthName)
-      .replace(/MMM/g, monthName.substring(0, 3))
       .replace(/MM/g, ('0' + month).slice(-2))
       .replace(/dd/g, ('0' + day).slice(-2))
-      .replace(/yy/g, year)
-      .replace(/M(?!a)/g, month)
-      .replace(/d/g, day)
+      .replace(/hh/g, ('0' + hour).slice(-2))
+      .replace(/mm/g, ('0' + minute).slice(-2))
+      .replace(/ss/g, ('0' + second).slice(-2))
     },
     parse(str) {
       if (!str) {
-        const now = new Date();
-        str = now.getFullYear() + '-' + (now.getMonth()+1) + '-' + now.getDay();
-      }
-      if (str.length == 10 && (this.format == 'dd-MM-yyyy' || this.format == 'dd/MM/yyyy')) {
-        str = str.substring(3,5)+'-'+str.substring(0,2)+'-'+str.substring(6,10);
+        const now = new Date()
+        str = now.getFullYear() + '-' + (now.getMonth()+1) + '-' + now.getDay()
       }
       const date = new Date(str)
       return isNaN(date.getFullYear()) ? null : date
@@ -289,21 +339,16 @@ export default {
         this.disabledDaysOfWeek.forEach((el)=> {
           if (week === parseInt(el, 10)) sclass = 'datepicker-item-disable'
         })
-      if (i === time.day) {
-        if (this.value) {
-          const valueDate = this.parse(this.value)
-          if (valueDate) {
-            if (valueDate.getFullYear() === time.year && valueDate.getMonth() === time.month) {
-              sclass = 'datepicker-dateRange-item-active'
-            }
-          }
-        }
-      }
-      this.dateRange.push({
-        text: i,
-        date: date,
-        sclass: sclass
-      })
+	      if (i === time.day) {
+	        if (this.currDate) {
+	          sclass = 'datepicker-dateRange-item-active'
+	        }
+	      }
+	      this.dateRange.push({
+	        text: i,
+	        date: date,
+	        sclass: sclass
+	      })
       }
       if (this.dateRange.length < 42) {
         const nextMonthNeed = 42 - this.dateRange.length
@@ -319,6 +364,9 @@ export default {
     }
   },
   ready() {
+  	this.hour = this.value.split(' ')[1].split(':')[0] || '00'
+  	this.minute = this.value.split(' ')[1].split(':')[1] || '00'
+  	this.second = this.value.split(' ')[1].split(':')[2] || '00'
     this.$dispatch('child-created', this)
     this.currDate = this.parse(this.value) || this.parse(new Date())
     this._closeEvent = EventListener.listen(window, 'click', (e)=> {
@@ -337,7 +385,7 @@ input.datepicker-input.with-reset-button {
 }
 div.datepicker > button.close {
   position: absolute;
-  top: calc(50% - 13px);
+  top: calc(50% - 11px);
   right: 10px;
 }
 div.datepicker > button.close {
@@ -449,5 +497,69 @@ div.datepicker > button.close:focus {
 }
 .datepicker-nextBtn{
     right: 2px;
+}
+.datepicker-time{
+	padding: 0 0 10px 15px;
+	color: #555;
+	font-family: 'Helvetica-Neue', 'Helvetica', 'Arial', 'sans-serif';
+	input{
+		font-family: 'Arial';
+		color: #333;
+		padding-left: 4px;
+		width: 25px;
+		border: 1px solid #ccc;
+		height: 25px;
+		border-radius: 3px;
+	}
+	/* .icons{
+		display: inline-block;
+		vertical-align: middle;
+		width: 25px;
+		height: 30px;
+		border: 1px solid #ccc;
+		border-radius: 2px;
+		a:first-child{
+			border-bottom: 1px solid #ccc;
+		}
+		a{
+			height: 15px;
+			width: 24px;
+			padding: 0 5px;
+			display: inline-block;
+			&:hover{
+				.dt-prev{
+					background-image: url(../assets/images/ixpic/dt-prev-hover.png);
+				}
+				.dt-next{
+					background-image: url(../assets/images/ixpic/dt-next-hover.png);
+				}
+			}
+			span{
+				display: inline-block;
+				width: 12px;
+				height: 6px;
+				vertical-align: top;
+				margin-top: 4px;
+			}
+		}
+		.dt-prev{
+			background-image: url(../assets/images/ixpic/dt-prev.png);
+		}
+		.dt-next{
+			background-image: url(../assets/images/ixpic/dt-next.png);
+		}
+	} */
+	.ok{
+		background: #00A2FF;
+		border: 1px solid #ccc;
+		color: #fff;
+		border-radius: 3px;
+		height: 28px;
+		width: 50px;
+		text-align: center;
+		&:hover{
+			background: #3276b1;
+		}
+	}
 }
 </style>

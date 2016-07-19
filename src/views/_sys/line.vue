@@ -22,13 +22,13 @@
 			:clz="grid.clz" 
 			:title="grid.title"
 			:has-checkbox="grid.hasCheckbox"
-			:sequence="grid.sequence"
+			:paginative="grid.paginative"
+			:date-picker="grid.datePicker"
 			:search="grid.search"
+			:sequence="grid.sequence"
 			:headers="grid.headers" 
 			:columns="grid.columns" 
-			:items="grid.items" 
 			:tools="grid.tools"
-			:params="grid.params"
 			:get-data="grid.getData"
 			:actions="grid.actions"
 		></grid>
@@ -48,30 +48,30 @@
 				grid: {
 					clz: 'sys-line',
 					title: '线路和车站管理',
-					hasCheckbox: true,
+					hasCheckbox: false,
 					sequence: '编号',
-					search: true,
-					headers: ['名字', '类型', 'IP地址'],
-					columns: ['name', 'type', 'ip'],
-					items: [],
-					params: {},
+					paginative: false,
+					datePicker: false,
+					search: false,
+					headers: ['标识号','名字', '类型', 'IP地址', '说明'],
+					columns: ['id','name', 'type', 'ip', 'desc'],
 					tools: {
-						deleted: (arr, cbFn) => {
+						refresh: (selectArr, cbFn) => {
 							cbFn();
 						}
 					},
 					actions: {
-						edit: (item) => {
+						edit: (item, cbFn) => {
 							console.log(item.id);
+							cbFn();
 						},
-						update: (item) => {
+						update: (item, cbFn) => {
 							console.log(item);
+							cbFn();
 						}
 					},
-					getData (params) {
-						TCM.Global.sysCaller('getAllSites', _.merge(_self.grid.params, params), (result) => {
-							_self.grid.items = result;	
-						});
+					getData (params, cbFn) {
+						TCM.Global.sysCaller('getAllSites', _.merge({s: 1}, params), cbFn);
 					}
 				}
 			};
@@ -140,8 +140,14 @@
 		}
 	}
 	.sys-line{
-		.col-name, .col-type, .col-ip{
-			width: 20%;
+		.col-name, .col-type, .col-ip, .col-desc{
+			width: 18%;
 		}
+		.v-body{
+			border-radius: 0 0 5px 5px;
+		}
+	}
+	#sysline-grid{
+		margin-bottom: 40px;
 	}
 </style>

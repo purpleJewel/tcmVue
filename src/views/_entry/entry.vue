@@ -8,7 +8,7 @@
 		<li><span class="pic-pwd"></span><span class="verLine"></span><input type="password" v-model="password" tabindex="2" placeholder="密码"></li>
 	</ul>
 	<a class="btn submit Enter" tabindex="3" @click="login"><span>立即登录</span></a>
-	<nv-alert :content="alert.txt" :show="alert.show"></nv-alert>
+	<nv-alert :content="alert.txt" :show="alert.show" @show="show"></nv-alert>
 </div>
 <div class="footer"><span class="footer-bar"></span></div>
 </template>
@@ -45,9 +45,7 @@
 					}
 					globalBus.emit('getSession', result);
 				});
-			}
-		},
-		events: {
+			},
 			show (data) {
 				let _self = this;
 				_self.alert.show = data;
