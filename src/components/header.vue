@@ -51,6 +51,9 @@
 						localStorage.removeItem(key);
 					}
 					TCM.Global.common('logout', {}, () => {
+					    window.OCC = null;    
+					    window.PTSD = null;
+					    window.Super = null;
 						this.$route.router.go({ name: 'entry'});
 					});
 				}
@@ -69,7 +72,7 @@
 		}
 	}
 </script>
-<style lang="sass">
+<style lang="less">
 	.navbar{
 	    height: 50px; background: #2a333a; z-index: 2000;
 	}

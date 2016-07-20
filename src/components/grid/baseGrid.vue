@@ -92,7 +92,7 @@
 		}
 	}
 </script>
-<style lang="sass">
+<style lang="less">
 	.base-grid{
 		color: #666;
 		font-family: '宋体';

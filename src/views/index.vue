@@ -2,8 +2,8 @@
     <div></div>
 </template>
 <script>
-    require('../assets/scss/iconfont/iconfont.css');
-    require('../assets/scss/CV.scss');
+    require('../assets/less/iconfont/iconfont.css');
+    require('../assets/less/CV.less');
 
     export default {
         ready () {

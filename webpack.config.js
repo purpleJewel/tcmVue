@@ -45,11 +45,10 @@ module.exports = {
         loaders: [{
             test: /\.vue$/,
             loader: 'vue-loader',
-        }, 
-        {
-            test: /\.scss$/,
+        }, {
+            test: /\.less$/,
             loader: ExtractTextPlugin.extract(
-                "style-loader", 'css-loader?sourceMap!sass-loader!cssnext-loader')
+                "style-loader", 'css-loader?sourceMap!less-loader!cssnext-loader')
         }, {
             test: /\.css$/,
             loader: ExtractTextPlugin.extract(

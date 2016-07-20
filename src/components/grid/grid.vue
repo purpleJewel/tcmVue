@@ -3,6 +3,7 @@
 	<div class="v-title">{{title}}</div>
 	<div class="v-tools">
 		<div class="btn-{{$key}} btn {{$key == 'deleted'? isabled : ''}}" data-key="$key" v-for="tool of tools" @click="toolFn($key, tool)"></div>
+		<slot name="tool-extend"></slot>
 		<div class="date-picker" v-if="datePicker">
 			<span>时间：</span>
 			<datepicker
@@ -41,12 +42,13 @@
 			@check-box="getSelectArr"
 		></base-grid>
 	</div>
-	<div class="v-foot" v-if="paginative">
+	<div class="v-foot">
 		<page
 			:page-no="params.pageNo"
 			:page-size="params.pageSize"
 			:total="total"
 			@change-page="changePage"
+			v-if="paginative"
 		></page>
 	</div>
 </div>
@@ -66,7 +68,12 @@
 	 * params: {
 	 * 		clz,				//表格class
 	 * 		hasCheckbox,		//是否显示checkbox
-	 * 		tools,				//tools对象
+	 * 		tools: {			//tools对象
+	 * 			//回调为表格刷新，selected选中的item数组
+	 * 			deleted (cbFn, selected) {
+	 * 				
+	 * 			}
+	 * 		}				
 	 * 		datePicker,			//是否显示日历搜索
 	 * 		search,				//是否显示时搜索框
 	 * 		sequence,			//显示序号名
@@ -106,10 +113,7 @@
 			return {
 				isabled: 'disabled',
 				data: {total: 0},
-				params: {
-					pageNo: 0,
-					pageSize: 20
-				},
+				params: {},
 
 				format: "yyyy-MM-dd hh:mm:ss",
 				reset: true
@@ -160,7 +164,7 @@
 				let _self = this;
 				if (key == 'deleted' && _self.isabled == 'disabled')
 					return;
-				tool(_self.selectArr, _self.cbFn);
+				tool(_self.cbFn, _self.selectArr);
 			},
 			searchFn (event) {
 				let _self = this;
@@ -193,12 +197,17 @@
 				_self.params.from = new Date(_self.from).getTime();
 				_self.params.to = new Date(_self.to).getTime();
 			}
+			if (_self.paginative) {
+				_self.params.pageNo = 0;
+				_self.params.pageSize = 20;
+			}
 			_self.cbFn();
 		}
 	}
 </script>
-<style lang="sass">
+<style lang="less">
 	.v-grid{
+		margin-bottom: 30px;
 		.v-title{
 			border-radius: 5px 5px 0 0;
 			background: #2C3E50;
@@ -209,11 +218,11 @@
 			line-height: 24px;
 		}
 		.v-tools{
-			padding: 20px 20px 10px;
+			padding: 20px 10px 10px 20px;
 			height: 70px;
 			background: #fff;
 			[class^="btn-"] {
-				margin-right: 15px;
+				margin-right: 10px;
 				height: 35px;
 				min-width: 20px;
 			}
@@ -222,6 +231,26 @@
 				background-image: url(../../assets/images/pic/btn-refresh.png);
 				&:hover{
 					background-image: url(../../assets/images/pic/btn-refresh-hover.png);
+				}
+			}
+			.btn-add{
+				width: 70px;
+				background-image: url(../../assets/images/pic/btn-add.png);
+				&:hover{
+					background-image: url(../../assets/images/pic/btn-add-hover.png);
+				}
+			}
+			.btn-deleted{
+				width: 70px;
+				background-image: url(../../assets/images/pic/btn-delete.png);
+				&.disabled{
+					background-image: url(../../assets/images/pic/btn-delete-disable.png);
+					&:hover{
+						background-image: url(../../assets/images/pic/btn-delete-disable.png);
+					}
+				}
+				&:hover{
+					background-image: url(../../assets/images/pic/btn-delete-hover.png);
 				}
 			}
 			.date-picker{

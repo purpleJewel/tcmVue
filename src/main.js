@@ -39,8 +39,6 @@ router.beforeEach((transition) => {
         window.PTSD = true;
     if (!window.Super && localStorage.length > 0 && localStorage.userType == Const.UserTypes.Super)
         window.Super = true;
-    if (!window.Admin && localStorage.length > 0 && localStorage.userType == Const.UserTypes.Admin)
-        window.Admin = true;
     if (transition.to.name === "entry" && localStorage.userId) 
         transition.redirect('/');
     if (transition.to.auth) {

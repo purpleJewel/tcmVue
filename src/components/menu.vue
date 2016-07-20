@@ -45,7 +45,7 @@
 		}	
 	}
 </script>
-<style lang="sass">
+<style lang="less">
 	.main{border-left: 1px solid #22272b; border-right: 1px solid #3a4249;
         &>li{
             width: 148px; float: left; height: 50px; line-height: 50px; text-align: center; border-right: 1px solid #22272b; border-left: 1px solid #3a4249; position: relative;

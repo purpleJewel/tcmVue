@@ -379,7 +379,7 @@ export default {
 }
 </script>
 
-<style lang="sass">
+<style lang="less">
 input.datepicker-input.with-reset-button {
   padding-right: 25px;
 }

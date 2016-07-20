@@ -63,7 +63,7 @@
 		}
 	}
 </script>
-<style lang="sass">
+<style lang="less">
 	.pagination{
 		position: relative;
 		font-family: '宋体';

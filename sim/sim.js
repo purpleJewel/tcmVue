@@ -2,9 +2,13 @@ import Const from '../src/libs/const.js';
 
 window.Test = {};
 let session = {};
-const siteType = 6;
-const userType = 1;
+let siteType = 2;
+let userType = 1;
 Test.login = (params) => {
+	if (params.userName == 'root') 
+		userType = 0;
+	else
+		userType = 1;
 	session.siteName = '望京';
 	session.siteId = 1;
 	session.siteType = siteType;

@@ -17,7 +17,7 @@
 		}
 	}
 </script>
-<style lang="sass">
+<style lang="less">
 	.checkbox-a{
 		cursor: pointer;
 		display: inline-block;

@@ -21,16 +21,16 @@
 		<grid 
 			:clz="grid.clz" 
 			:title="grid.title"
-			:has-checkbox="grid.hasCheckbox"
+			:has-checkbox="hasCheckbox"
 			:paginative="grid.paginative"
 			:date-picker="grid.datePicker"
 			:search="grid.search"
 			:sequence="grid.sequence"
-			:headers="grid.headers" 
-			:columns="grid.columns" 
-			:tools="grid.tools"
+			:headers="headers" 
+			:columns="columns" 
+			:tools="tools"
+			:actions="actions"
 			:get-data="grid.getData"
-			:actions="grid.actions"
 		></grid>
 	</div>
 </div>
@@ -39,15 +39,45 @@
 	import grid from '../../components/grid/grid.vue';
 	import nvConfirm from '../../components/nvConfirm.vue';
 
-	let header = ['标识号','名字', '类型', 'IP地址', '说明'];
-	let columns = ['id','name', 'type', 'ip', 'desc'];
-	let tools = {
+	let toolList = [
+		{
+			refresh (cbFn) {
+				alert('refresh');
+				cbFn();
+			}
+		},
+		{
+			add (cbFn) {
+				alert('add');
+				cbFn();
+			}
+		},
+		{
+			deleted (cbFn, selected) {
+				alert('deleted');
+				cbFn();
+			}
+		},
+		{
+			copy (cbFn) {
+				alert('copy');
+				cbFn();
+			}
+		},
+		{
+			affiliate (cbFn) {
+				alert('affiliate');
+				cbFn();
+			}
+		}
+	];
 
+	let toolItem = {
+		all: _.assign({}, toolList[0], toolList[1], toolList[2], toolList[3], toolList[4]),
+		super: _.assign({}, toolList[0], toolList[1], toolList[2], toolList[3]),
+		ptsd: _.assign({}, toolList[0], toolList[4]),
+		default: toolList[0]
 	};
-	if (window.PTSD) {
-		header = ['标识号','名字', '类型', 'IP地址', '管辖状态', '说明'];
-		columns = ['id','name', 'type', 'ip', 'selected', 'desc'];
-	}
 
 	export default {
 		data () {
@@ -58,19 +88,44 @@
 				grid: {
 					clz: 'sys-line',
 					title: '线路和车站管理',
-					hasCheckbox: false,
 					sequence: '编号',
 					paginative: false,
 					datePicker: false,
 					search: false,
-					headers: header,
-					columns: columns,
-					tools: {
-						refresh: (selectArr, cbFn) => {
-							cbFn();
-						}
-					},
-					actions: {
+					getData (params, cbFn) {
+						TCM.Global.sysCaller('getAllSites', _.merge({}, params), cbFn);
+					}
+				}
+			};
+		},
+		computed: {
+			hasCheckbox () { 
+				if (window.Super || window.OCC) 
+					return true;
+				return false;
+			},
+			headers () { 
+				if (window.PTSD) 
+					return ['标识号','名字', '类型', 'IP地址', '管辖状态', '说明'];
+				return ['标识号','名字', '类型', 'IP地址', '说明'];
+			},
+			columns () { 
+				if (window.PTSD) 
+					return ['id','name', 'type', 'ip', 'selected', 'desc'];
+				return ['id','name', 'type', 'ip', 'desc'];
+			},
+			tools () { 
+				if (window.PTSD && window.Super)
+					return toolItem.all;
+				if (window.PTSD)
+					return toolItem.ptsd;
+				if (window.Super || window.OCC) 
+					return toolItem.super;
+				return toolItem.default;
+			},
+			actions () { 
+				if (window.Super || window.OCC) 
+					return {
 						edit: (item, cbFn) => {
 							console.log(item.id);
 							cbFn();
@@ -79,12 +134,9 @@
 							console.log(item);
 							cbFn();
 						}
-					},
-					getData (params, cbFn) {
-						TCM.Global.sysCaller('getAllSites', _.merge({}, params), cbFn);
-					}
-				}
-			};
+					};
+				return {};
+			}
 		},
 		methods: {
 			setSiteName () {
@@ -100,7 +152,7 @@
 		}
 	}
 </script>
-<style lang="sass">
+<style lang="less">
 	#body{
 		margin-top: 30px;
 	}
@@ -154,10 +206,7 @@
 			width: 18%;
 		}
 		.col-selected{
-			width: 5%;
-		}
-		.v-body{
-			border-radius: 0 0 5px 5px;
+			width: 7%;
 		}
 		.tick{
 			width: 11px;
@@ -165,8 +214,14 @@
     		display: inline-block;
     		background: url(../../assets/images/pic/tick.png);
 		}
-	}
-	#sysline-grid{
-		margin-bottom: 40px;
+		.btn-affiliate{
+			width: 108px;
+			float: right;
+			background-image: url(../../assets/images/pic/affiliate-sites.png);
+		}
+		.btn-copy{
+			width: 125px;
+			background-image: url(../../assets/images/pic/btn-copy.png);
+		}
 	}
 </style>

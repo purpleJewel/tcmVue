@@ -1,8 +1,8 @@
 <template>
-<div class="confirm-mask" v-show="show" transition="fade">
-	<div class="nv-confirm-inner">
-		<div class="nv-title">提示</div>
-		<div class="content" v-text="content"></div>
+<div class="dialog-mask" v-show="show" transition="fade">
+	<div class="nv-dialog-inner">
+		<div class="nv-title">{{title}}</div>
+		<slot name="content"></slot>
 		<div class="foot">
 			<a class="ok" @click="choose(1)"></a>
 			<a class="cancel" @click="choose(0)"></a>
@@ -12,16 +12,16 @@
 </template>
 <script>
 	export default {
-		props: ['content', 'show'],
+		props: ['title', 'content', 'show'],
 		methods: {
 			choose (data) {
-				this.$dispatch('confirm-choose', data);
+				this.$dispatch('dialog-choose', data);
 			}
 		}
 	}
 </script>
 <style lang="less">
-.confirm-mask{
+.dialog-mask{
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -30,7 +30,7 @@
 	z-index: 9999;
 	background-color: rgba(0, 0, 0, 0.3);
 	text-align: center;
-	.nv-confirm-inner{
+	.nv-dialog-inner{
 		min-width: 350px;
 		position: relative;
 		display: inline-block;
@@ -77,7 +77,7 @@
 	}
 }
 .fade-enter ,.fade-leave {
-	.nv-confirm-inner{
+	.nv-dialog-inner{
 		-webkit-transform: scale(0.9);
 		transform: scale(0.9);	
 	}

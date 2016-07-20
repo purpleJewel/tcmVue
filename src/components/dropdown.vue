@@ -30,7 +30,7 @@
 		}
 	}
 </script>
-<style lang="sass">
+<style lang="less">
 	.dropdown{
 		display: inline-block;
 	}

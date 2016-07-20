@@ -1,12 +1,12 @@
 <template>
-	<div class="alert-mask" v-show="show" transition="fade">
-		<div class="nv-alert-inner">
-			<div v-text="content"></div>
-			<button type="button" class="close" @click="close">
-			  <span>&times;</span>
-			</button>
-		</div>
+<div class="alert-mask" v-show="show" transition="fade">
+	<div class="nv-alert-inner">
+		<div v-text="content"></div>
+		<button type="button" class="close" @click="close">
+		  <span>&times;</span>
+		</button>
 	</div>
+</div>
 </template>
 <script>
 	export default {
@@ -18,7 +18,7 @@
 		}
 	}
 </script>
-<style lang="sass">
+<style lang="less">
 .alert-mask{
 	position: fixed;
 	top: 0;
