@@ -37,6 +37,8 @@
 			:sequence="sequence"
 			:headers="headers" 
 			:columns="columns" 
+			:page-no="params.pageNo"
+			:page-size="params.pageSize"
 			:items="items" 
 			:select-arr.sync="selectArr"
 			:actions="gridActions"
@@ -44,20 +46,20 @@
 		></base-grid>
 	</div>
 	<div class="v-foot">
-		<page
+		<pagination
 			:page-no="params.pageNo"
 			:page-size="params.pageSize"
 			:total="total"
 			@change-page="changePage"
 			v-if="paginative"
-		></page>
+		></pagination>
 	</div>
 </div>
 </template>
 <script>
 	import baseGrid from '../../components/grid/baseGrid.vue';
 	import datepicker from '../Datepicker.vue';
-	import page from '../page.vue';
+	import pagination from '../pagination.vue';
 
 	const defaultTools = {
 		delete () {
@@ -114,7 +116,10 @@
 			return {
 				isabled: 'disabled',
 				data: {total: 0},
-				params: {},
+				params: {
+					pageNo: 0,
+					pageSize: 20
+				},
 				selectArr: [],
 
 				format: "yyyy-MM-dd hh:mm:ss",
@@ -193,19 +198,18 @@
 		components: {
 			baseGrid,
 			datepicker,
-			page
+			pagination
 		},
 		ready () {
-			const _self = this;
-			if (_self.datePicker) {
-				_self.params.from = new Date(_self.from).getTime();
-				_self.params.to = new Date(_self.to).getTime();
+			if (this.datePicker) {
+				this.params.from = new Date(this.from).getTime();
+				this.params.to = new Date(this.to).getTime();
 			}
-			if (_self.paginative) {
-				_self.params.pageNo = 0;
-				_self.params.pageSize = 20;
+			if (!this.paginative) {
+				delete this.params.pageNo;
+				delete this.params.pageSize;
 			}
-			_self.cbFn();
+			this.cbFn();
 		}
 	}
 </script>
