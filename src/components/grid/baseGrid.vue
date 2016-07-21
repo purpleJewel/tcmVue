@@ -2,7 +2,7 @@
 <div class="base-grid">
 	<ul class="hdr">
 		<li class="col-_check" v-if="hasCheckbox">
-			<checkbox :check-fn="checkFn" :selected="rootSelected" key="root"></checkbox>
+			<checkbox @selected="checkFn" :selected="rootSelected" key="root"></checkbox>
 		</li>
 		<li class="col-_no" v-if="sequence">
 			<a data-key="_no">
@@ -20,7 +20,7 @@
 	<div class="t-body">
 		<ul class="row" v-for="item of items" track-by="id">
 			<li class="col-_check" v-if="hasCheckbox">
-				<checkbox :check-fn="checkFn" :selected="selected" :key="item.id"></checkbox>
+				<checkbox @selected="checkFn" :selected="selected(item.id)" :key="item.id"></checkbox>
 			</li>
 			<li class="col-_no" v-if="sequence">{{$index}}</li>
 			<li class="col-{{key}}" v-for="key of columns">{{{item[key] | getGridValue key clz}}}</li>
@@ -43,6 +43,7 @@
 	 * 		items: [			//表格显示数据
 	 * 			{id, name....}
 	 * 		],
+	 * 		selectArr,			//
 	 * 		actions: {			//对于每一列表格元素的所有操作集合
 	 * 			add: (item) => {
 	 * 				...
@@ -51,41 +52,48 @@
 	 * }
 	 */
 	export default {
-		props: ['clz', 'hasCheckbox', 'sequence', 'headers', 'columns', 'items', 'actions'],
+		props: {
+			clz: String,
+			hasCheckbox: Boolean,
+			sequence: String,
+			headers: Array,
+			columns: Array,
+			items: Array,
+			actions: Object,
+			selectArr: Array
+		},
 		data () {
-			let _self = this;
 			return {
 				rootSelected: false,
-				selected: false,
-				checkFn: (isSelected, key) => {
-					_.isArray(_self.selectArr) ? '' : _self.selectArr = [];
+				checkFn: (key, isSelected) => {
 					if (key == 'root') {
 						if (isSelected)
-							_self.selectArr = _self.items.map((item, idx) => {return item.id;});
+							this.selectArr = this.items.map((item, idx) => {return item.id;});
 						else
-							_self.selectArr = [];
-						_self.rootSelected = isSelected;
-						_self.selected = !isSelected;
-						_self.$nextTick(() => {
-							_self.selected = isSelected;
-						});
-						this.$dispatch('check-box', _self.selectArr);
-						return;
-					}
-					if (isSelected) {
-						_self.selectArr.push(key);
+							this.selectArr = [];
 					} else {
-						let _index = _self.selectArr.forEach((i, idx) => {if (i == key) return idx;});
-						_self.selectArr.splice(_index, 1);
-						_self.rootSelected = isSelected;
+						if (isSelected) 
+							this.selectArr.push(key);
+						else 
+							this.selectArr.splice(_.indexOf(this.selectArr, key), 1);
 					}
-					if (_self.selectArr.length === _self.items.length)
-						_self.rootSelected = isSelected;
-					if (_self.selectArr.length === 0)
-						_self.selected = isSelected;
-					this.$dispatch('check-box', _self.selectArr);
+					this.$dispatch('check-box');
 				}
 			};
+		},
+		methods: {
+			selected (id) {
+				if (_.indexOf(this.selectArr, id) > -1)
+					return true;
+				return false;
+			}
+		},
+		watch: {
+		  selectArr (val, oldVal) {
+		    this.rootSelected = false;
+		    if (val.length !== 0 && val.length === this.items.length) 
+		    	this.rootSelected = true;
+		  }
 		},
 		components: {
 			checkbox

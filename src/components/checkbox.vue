@@ -1,18 +1,17 @@
 <template>
-<a class="checkbox-a" data-key="{{key}}" @click="f(checkFn)">
+<a class="checkbox-a" data-key="{{key}}" @click="f()">
 	<span class="checkbox {{selected ? 'selected' : ''}}"></span>
 	<span v-text="text"></span>
 </a>
 </template>
 <script>
 	export default {
-		props: ['checkFn', 'selected', 'key', 'text'],
+		props: ['selected', 'key', 'text'],
 		methods: {
-			f (checkFn) {
-				let _self = this;
-				_self.selected = !_self.selected;
-				if (checkFn)
-					checkFn(_self.selected, _self.key);
+			f () {
+				const _self = this;
+				this.selected = !this.selected;
+				this.$dispatch('selected', this.key, this.selected);
 			}
 		}
 	}

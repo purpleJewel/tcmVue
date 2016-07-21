@@ -33,51 +33,21 @@
 			:get-data="grid.getData"
 		></grid>
 	</div>
+	<dialog 
+		:show.sync="dialog.show" 
+		:clz="dialog.clz"
+		:title="dialog.title"
+		:unit.sync="dialog.unit" 
+		@ok-fn="okFn">
+		<div slot="content">{{dialog.content}}</div>
+	</dialog>
 </div>
 </template>
 <script>
 	import grid from '../../components/grid/grid.vue';
-	import nvConfirm from '../../components/nvConfirm.vue';
+	import dialog from '../../components/dialog.vue';
 
-	let toolList = [
-		{
-			refresh (cbFn) {
-				alert('refresh');
-				cbFn();
-			}
-		},
-		{
-			add (cbFn) {
-				alert('add');
-				cbFn();
-			}
-		},
-		{
-			deleted (cbFn, selected) {
-				alert('deleted');
-				cbFn();
-			}
-		},
-		{
-			copy (cbFn) {
-				alert('copy');
-				cbFn();
-			}
-		},
-		{
-			affiliate (cbFn) {
-				alert('affiliate');
-				cbFn();
-			}
-		}
-	];
-
-	let toolItem = {
-		all: _.assign({}, toolList[0], toolList[1], toolList[2], toolList[3], toolList[4]),
-		super: _.assign({}, toolList[0], toolList[1], toolList[2], toolList[3]),
-		ptsd: _.assign({}, toolList[0], toolList[4]),
-		default: toolList[0]
-	};
+	const Caller = TCM.Global.sysCaller;
 
 	export default {
 		data () {
@@ -93,8 +63,15 @@
 					datePicker: false,
 					search: false,
 					getData (params, cbFn) {
-						TCM.Global.sysCaller('getAllSites', _.merge({}, params), cbFn);
+						Caller('getAllSites', _.merge({}, params), cbFn);
 					}
+				},
+				dialog: {
+					show: false,
+					clz: '',
+					title: '',
+					content: '',
+					unit: null
 				}
 			};
 		},
@@ -115,37 +92,111 @@
 				return ['id','name', 'type', 'ip', 'desc'];
 			},
 			tools () { 
+				const _self = this;
+				let toolList = ['refresh'];
 				if (window.PTSD && window.Super)
-					return toolItem.all;
+					toolList = ['refresh', 'add', 'deleted', 'copy', 'affiliate'];
 				if (window.PTSD)
-					return toolItem.ptsd;
+					toolList = ['refresh', 'affiliate'];
 				if (window.Super || window.OCC) 
-					return toolItem.super;
-				return toolItem.default;
+					toolList = ['refresh', 'add', 'deleted', 'copy'];
+				return _.reduce(toolList, (obj, item) => {
+					obj[item] = _self[item];
+					return obj;
+				}, {});
 			},
 			actions () { 
+				const _self = this;
 				if (window.Super || window.OCC) 
-					return {
-						edit: (item, cbFn) => {
-							console.log(item.id);
-							cbFn();
-						},
-						update: (item, cbFn) => {
-							console.log(item);
-							cbFn();
-						}
-					};
+					return _.reduce(['edit', 'deleted'], (obj, item) => {
+						obj[item] = _self[item];
+						return obj;
+					}, {});
 				return {};
 			}
 		},
 		methods: {
 			setSiteName () {
 				alert('setSiteName');
-			}
+			},
+			okFn () {},
+			/**
+			 * [getDialog description]
+			 * @param  {[object]} cfg {
+			 *   clz,
+			 *   title,
+			 *   content,
+			 *   unit: {
+			 *   	id, 
+			 *   	name,
+			 *   	properties: [
+			 *   		{key, name, value, [type, list]}
+			 *   	]
+			 *   }
+			 * }
+			 * @return {[type]}     [description]
+			 */
+			getDialog (cfg) {
+				for (let key in this.dialog) {
+					this.dialog[key] = cfg[key];
+				}
+				this.dialog.show = true;
+			},
+			refresh (cbFn) {
+				cbFn();
+			},
+			add (cbFn) {
+				const unit = {
+					id: '',
+					name: '',
+					properties: [
+						{key: 'name', name:'下拉', value: '123', type: 'dropdown', list: [
+							{name:'名字', value: '546546'},
+							{name:'名字', value: '561'},
+							{name:'名字', value: '98754'},
+							{name:'名字', value: '84235465'},
+						]},
+						{key: 'type', name:'类型', value: '789'}
+					]
+				};
+				this.getDialog({
+					clz: 'add-site',
+					title: '新建站点',
+					unit: unit
+				});
+				this.okFn = () => {
+					// cbFn();
+				};
+			},
+			deleted (cbFn, selected) {
+				const ids = _.isArray(selected) ? selected : [selected.id];
+				this.getDialog({
+					clz: 'deleted-site',
+					title: '删除站点',
+					content: '是否删除选中站点？'
+				});
+				this.okFn = () => {
+					Caller('deletedSites', {ids: ids}, () => {
+						this.dialog.show = false;
+						cbFn();
+					});
+				};
+			},
+			copy (cbFn) {
+				alert('copy');
+				cbFn();
+			},
+			affiliate (cbFn) {
+				alert('affiliate');
+				cbFn();
+			},
+			edit (cbFn, item) {
+				cbFn();
+			},
 		},
 		components: {
 			grid,
-			nvConfirm
+			dialog
 		},
 		ready () {
 
@@ -153,6 +204,11 @@
 	}
 </script>
 <style lang="less">
+	.line{
+		.add-site .disabled{
+			display: inline-block;
+		}
+	}
 	#body{
 		margin-top: 30px;
 	}

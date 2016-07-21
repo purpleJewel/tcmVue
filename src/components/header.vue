@@ -19,7 +19,7 @@
 		</ul>
 	</div>
 </nav>
-<nv-confirm :show="confirm.show" :content="confirm.txt" @confirm-choose="confirmChoose"></nv-confirm>
+<nv-confirm :show.sync="confirm.show" :content="confirm.txt" @confirm-ok="confirmOk"></nv-confirm>
 <div class="bg"></div>
 </template>
 <script>
@@ -39,24 +39,19 @@
 		},
 		methods: {
 			logout () {
-				let _self = this;
-				_self.confirm.show = true;
-				_self.confirm.txt = '确定退出系统？';
+				this.confirm.show = true;
+				this.confirm.txt = '确定退出系统？';
 			},
-			confirmChoose (data) {
-				let _self = this;
-				_self.confirm.show = false;
-				if (data) {
-					for (let key in localStorage) {
-						localStorage.removeItem(key);
-					}
-					TCM.Global.common('logout', {}, () => {
-					    window.OCC = null;    
-					    window.PTSD = null;
-					    window.Super = null;
-						this.$route.router.go({ name: 'entry'});
-					});
+			confirmOk () {
+				for (let key in localStorage) {
+					localStorage.removeItem(key);
 				}
+				TCM.Global.common('logout', {}, () => {
+				    window.OCC = null;    
+				    window.PTSD = null;
+				    window.Super = null;
+					this.$route.router.go({ name: 'entry'});
+				});
 			}
 		},
 		components: {
@@ -64,7 +59,7 @@
 			nvConfirm
 		},
 		ready () {
-			let _self = this;
+			const _self = this;
 			globalBus.on('getSession', function(data){
 				_self.userName = data.userName;
 				_self.siteName = data.siteName;

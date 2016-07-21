@@ -154,10 +154,14 @@ body {
 }
 
 .title {
-    color: @title;
-    font-size: @font-title;
-    line-height: 1.5;
-    @extend .text-overflow;
+    border-radius: 5px 5px 0 0;
+    background: #2C3E50;
+    height: 40px;
+    color: #fff;
+    font-size: 14px;
+    padding: 8px 20px;
+    line-height: 24px;
+    &:extend(.text-overflow);
 }
 
 .display-flex {

@@ -38,8 +38,8 @@ TCM.Global.sysCaller = (name, params, cbFn, failFn) => {
 			 */
 			setTimeout(() => {cbFn(Test.getAllSites(params));}, 200);
 			break;
-		// case 'logout':
-		// 	setTimeout(() => {cbFn(Test.logout(params));}, 200);
-		// 	break;
+		case 'deletedSites':
+			setTimeout(() => {cbFn(Test.deletedSites(params));}, 200);
+			break;
 	}
 };

@@ -2,7 +2,7 @@ import Const from '../src/libs/const.js';
 
 window.Test = {};
 let session = {};
-let siteType = 2;
+let siteType = 1;
 let userType = 1;
 Test.login = (params) => {
 	if (params.userName == 'root') 
@@ -102,10 +102,22 @@ var Sites = [].concat(
 	genSite(5 + siteNames.length, "13号线派出所", 5),
 	genSite(6 + siteNames.length, "公交总队", 6)
 );
-
+var siteIds = Sites.map((item, idx) => {return item.id});
 Test.getAllSites = () => {
 	return {
 		total: Sites.length,
 		data: Sites
 	};
+}
+Test.deletedSites = (params) => {
+	var arr = _.difference(siteIds, params.ids);
+	if (arr.length === 0) 
+		return Sites = [];
+	var arr1 = _.reduce(Sites, (acc, item) => {
+		if (_.indexOf(arr, item.id) > -1)
+			acc.push(item);
+		return acc;
+	}, []);
+	Sites = arr1;
+	return Sites;
 }

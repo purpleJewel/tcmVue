@@ -1,6 +1,6 @@
 <template>
 <div class="v-grid {{clz}}">
-	<div class="v-title">{{title}}</div>
+	<div class="title">{{title}}</div>
 	<div class="v-tools">
 		<div class="btn-{{$key}} btn {{$key == 'deleted'? isabled : ''}}" data-key="$key" v-for="tool of tools" @click="toolFn($key, tool)"></div>
 		<slot name="tool-extend"></slot>
@@ -38,6 +38,7 @@
 			:headers="headers" 
 			:columns="columns" 
 			:items="items" 
+			:select-arr.sync="selectArr"
 			:actions="gridActions"
 			@check-box="getSelectArr"
 		></base-grid>
@@ -83,7 +84,7 @@
 	 * 			{id, name....}
 	 * 		],
 	 * 		actions: {			//对于每一列表格元素的所有操作集合
-	 * 			add: (item, cbFn) => {
+	 * 			add: (cbFn, item) => {
 	 * 				...
 	 * 			}
 	 * 		},
@@ -114,6 +115,7 @@
 				isabled: 'disabled',
 				data: {total: 0},
 				params: {},
+				selectArr: [],
 
 				format: "yyyy-MM-dd hh:mm:ss",
 				reset: true
@@ -121,8 +123,11 @@
 		},
 		computed: {
 			cbFn () {
-				let _self = this;
-				return () => {_self.getData(_self.params, (result) => {_self.data = result;});};
+				return () => {this.getData(this.params, (result) => {
+					this.data = result;
+					this.isabled = 'disabled';
+					this.selectArr = [];
+				});};
 			},
 			from () {
 				const now = new Date(new Date().getTime() - 24*60*60*90000);
@@ -139,11 +144,11 @@
 				return this.data.total;
 			},
 			gridActions () {
-				let _self = this;
+				const _self = this;
 				let actionHT = {};
 				for (let key in _self.actions) {
 					actionHT[key] = (item) => {
-						_self.actions[key](item, _self.cbFn);
+						_self.actions[key](_self.cbFn, item);
 					};
 				}
 				return actionHT;
@@ -153,21 +158,20 @@
 			getDate (date) {
 				return date.toLocaleDateString().split("/").map((item, idx) => {if(idx>0) return ('0'+item).slice(-2); return item;}).join('-') + ' ' + '00:00';
 			},
-			getSelectArr (arr) {
-				this.selectArr = arr;
-				if (arr.length === 0) 
+			getSelectArr () {
+				if (this.selectArr.length === 0) 
 					this.isabled = 'disabled';
 				else
 					this.isabled = '';
 			},
 			toolFn (key, tool) {
-				let _self = this;
+				const _self = this;
 				if (key == 'deleted' && _self.isabled == 'disabled')
 					return;
 				tool(_self.cbFn, _self.selectArr);
 			},
 			searchFn (event) {
-				let _self = this;
+				const _self = this;
 				if (event.type == 'click' || event.type == 'keyup' && event.key == 'Enter')
 					_self.cbFn();
 			},
@@ -175,13 +179,13 @@
 				this.params[key] = new Date(value).getTime();
 			},
 			searchDate () {
-				let _self = this;
+				const _self = this;
 				if (_self.params.from > _self.params.to)
 					return alert("开始时间不能超过结束时间");
 				_self.cbFn();
 			},
 			changePage (pageNo) {
-				let _self = this;
+				const _self = this;
 				_self.params.pageNo = pageNo;
 				_self.cbFn();
 			}
@@ -192,7 +196,7 @@
 			page
 		},
 		ready () {
-			let _self = this;
+			const _self = this;
 			if (_self.datePicker) {
 				_self.params.from = new Date(_self.from).getTime();
 				_self.params.to = new Date(_self.to).getTime();
@@ -208,15 +212,6 @@
 <style lang="less">
 	.v-grid{
 		margin-bottom: 30px;
-		.v-title{
-			border-radius: 5px 5px 0 0;
-			background: #2C3E50;
-			height: 40px;
-			color: #fff;
-			font-size: 14px;
-			padding: 8px 20px;
-			line-height: 24px;
-		}
 		.v-tools{
 			padding: 20px 10px 10px 20px;
 			height: 70px;
