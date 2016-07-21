@@ -5,20 +5,16 @@
 		<div class="content {{clz}}">
 			<slot name="content"></slot>
 			<ul v-if="unit">
-				<li class="property disabled">
-					<label class="label" for="id">标识号:</label>
-					<input type="text" name="id" v-model="unit.id">
+				<li class="pro-{{$key}} property" v-if="$key != 'properties'" v-for="property of unit">
+					<label class="label" for="{{$key}}">{{$key | getDialogName property clz}} :</label>
+					<input type="text" name="{{$key}}" v-model="property">
 				</li>
-				<li class="property">
-					<label class="label" for="name">名称:</label>
-					<input type="text" name="name" v-model="unit.name">
+				<li class="pro-{{property.key}} property" v-if="unit.properties && !property.type" v-for="property of unit.properties">
+					<label class="label" for="{{property.key}}">{{property.name}} :</label>
+					<input name="{{property.key}}" v-model="property.value">
 				</li>
-				<li class="property" v-if="!property.type" v-for="property of unit.properties">
-					<label class="label" for="property.key">{{property.name+':'}}</label>
-					<input name="property.key" v-model="property.value">
-				</li>
-				<li class="property" v-if="property.type == 'dropdown'" v-for="property of unit.properties">
-					<label class="label" for="property.key">{{property.name+':'}}</label>
+				<li class="pro-{{property.key}} property" v-if="unit.properties && property.type == 'dropdown'" v-for="property of unit.properties">
+					<label class="label" for="{{property.key}}">{{property.name}} :</label>
 					<dropdown
 						:key="property.key"
 						:value="property.value"
@@ -88,9 +84,6 @@
 	vertical-align: middle;
 	box-shadow: 0 10px 30px rgba(0, 0, 0, .44);
 	transition: all .3s ease;
-	.disabled{
-		display: none;
-	}
 	.content{
 		min-height: 90px;
 		background-color: #fff;
@@ -144,6 +137,9 @@
 	    	}
 	    }
 	}
+}
+.pro-id{
+	display: none;
 }
 .fade-enter ,.fade-leave {
 	.nv-dialog-inner{

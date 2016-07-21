@@ -17,13 +17,13 @@ exports.getLastTimeStr = (time, friendly) => {
 
 
 /** 获取表格每一个栏数据
- *  @param {string} [value] [用于显示的值]
  *  @param {string} [key] [这列数据的key值]
+ *  @param {string} [value] [用于显示的值]
  *  @param {string} [clz] [此表格的clz类区别]
  */
 
-exports.getGridValue = (value, key, clz) => {
-    const customSysLine = (key, value) => {
+exports.getGridValue = (key, value, clz) => {
+    const CustomSysLine = (key, value) => {
         switch (key) {
             case 'type':
                 return TcmConst.SiteTypeNames[value];
@@ -38,7 +38,31 @@ exports.getGridValue = (value, key, clz) => {
     };
     switch (clz) {
         case 'sys-line':
-            return customSysLine(key, value);
+            return CustomSysLine(key, value);
+            break;
+        default:
+            return value;
+            break;
+    }
+};
+
+exports.getDialogName = (key, value, clz) => {
+    const CreateSite = (key, value) => {
+        switch (key) {
+            case 'id':
+                return '标识号';
+                break;
+            case 'name':
+                return '站点名';
+                break;
+            default:
+                return value;
+                break;
+        }
+    };
+    switch (clz) {
+        case 'create-site':
+            return CreateSite(key, value);
             break;
         default:
             return value;

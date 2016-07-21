@@ -95,11 +95,11 @@
 				const _self = this;
 				let toolList = ['refresh'];
 				if (window.PTSD && window.Super)
-					toolList = ['refresh', 'add', 'deleted', 'copy', 'affiliate'];
+					toolList = ['refresh', 'create', 'deleted', 'copy', 'affiliate'];
 				if (window.PTSD)
 					toolList = ['refresh', 'affiliate'];
 				if (window.Super || window.OCC) 
-					toolList = ['refresh', 'add', 'deleted', 'copy'];
+					toolList = ['refresh', 'create', 'deleted', 'copy'];
 				return _.reduce(toolList, (obj, item) => {
 					obj[item] = _self[item];
 					return obj;
@@ -145,7 +145,7 @@
 			refresh (cbFn) {
 				cbFn();
 			},
-			add (cbFn) {
+			create (cbFn) {
 				const unit = {
 					id: '',
 					name: '',
@@ -160,11 +160,12 @@
 					]
 				};
 				this.getDialog({
-					clz: 'add-site',
+					clz: 'create-site',
 					title: '新建站点',
 					unit: unit
 				});
 				this.okFn = () => {
+					console.log(unit);
 					// cbFn();
 				};
 			},
@@ -205,7 +206,7 @@
 </script>
 <style lang="less">
 	.line{
-		.add-site .disabled{
+		.pro-id{
 			display: inline-block;
 		}
 	}

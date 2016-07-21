@@ -61,7 +61,7 @@
 
 	const defaultTools = {
 		delete () {
-
+			
 		}
 	};
 
@@ -228,11 +228,11 @@
 					background-image: url(../../assets/images/pic/btn-refresh-hover.png);
 				}
 			}
-			.btn-add{
+			.btn-create{
 				width: 70px;
-				background-image: url(../../assets/images/pic/btn-add.png);
+				background-image: url(../../assets/images/pic/btn-create.png);
 				&:hover{
-					background-image: url(../../assets/images/pic/btn-add-hover.png);
+					background-image: url(../../assets/images/pic/btn-create-hover.png);
 				}
 			}
 			.btn-deleted{
