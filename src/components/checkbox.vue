@@ -1,7 +1,7 @@
 <template>
 <a class="checkbox-a" data-key="{{key}}" @click="f()">
 	<span class="checkbox {{selected ? 'selected' : ''}}"></span>
-	<span v-text="text"></span>
+	<span class="label" v-text="text"></span>
 </a>
 </template>
 <script>
@@ -9,7 +9,6 @@
 		props: ['selected', 'key', 'text'],
 		methods: {
 			f () {
-				const _self = this;
 				this.selected = !this.selected;
 				this.$dispatch('selected', this.key, this.selected);
 			}

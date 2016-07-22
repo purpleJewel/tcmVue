@@ -98,6 +98,7 @@
 			border: 1px solid #ccc;
 			border-radius: 5px;
 			overflow-y: auto;
+			overflow-x: hidden;
 			box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
 			padding-top: 2px;
 			z-index: 5000;
