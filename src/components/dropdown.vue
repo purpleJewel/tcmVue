@@ -1,19 +1,19 @@
 <template>
 <div class="dropdown">
 	<button class="dropdown-toggle" type="button" @click="open" data-key="{{key}}">
-		<span class="key-{{key}} btn">{{value}}</span>
+		<span class="key-{{key}} btn">{{name}}</span>
 		<span class="split"></span>
 		<span class="pic-"></span>
 	</button>
 	<ul class="dropdown-menu" v-show="showMenu">
-		<li class="list" v-for="item of list" @click="check(item.value)">{{item.value}}</li>
+		<li class="list" v-for="item of list" @click="check(item.name, item.value)">{{item.name}}</li>
 	</ul>
 </div>
 </template>
 <script>
 	import EventListener from '../libs/EventListener.js';
 	export default {
-		props: ['key', 'value', 'list'],
+		props: ['key', 'name', 'value', 'list'],
 		data () {
 			return {
 				showMenu: false
@@ -23,7 +23,8 @@
 			open () {
 				this.showMenu = !this.showMenu;
 			},
-			check (value) {
+			check (name, value) {
+				this.name = name;
 				this.value = value;
 				this.showMenu = false;
 				this.$dispatch('check-fn', this.key, value);
@@ -91,7 +92,7 @@
 		.dropdown-menu{
 			position: absolute;
 			top: 32px;
-			height: 150px;
+			max-height: 125px;
 			width: 230px;
 			background: #fff;
 			border: 1px solid #ccc;
@@ -99,6 +100,7 @@
 			overflow-y: auto;
 			box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
 			padding-top: 2px;
+			z-index: 5000;
 			.list{
 				cursor: pointer;
 				width: 228px;

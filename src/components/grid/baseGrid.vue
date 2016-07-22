@@ -25,7 +25,7 @@
 			<li class="col-_no" v-if="sequence">{{pageNo * pageSize + ($index + 1)}}</li>
 			<li class="col-{{key}}" v-for="key of columns">{{{key | getGridValue item[key] clz}}}</li>
 			<li class="rt col-actions">
-				<a class="btn act-{{$key}}" v-for="fn of actions" @click="fn(item)">{{$key}}</a>
+				<a class="btn act-{{$key}}" v-for="fn of actions" @click="fn(item)"></a>
 			</li>
 		</ul>
 	</div>
@@ -158,10 +158,19 @@
 			width: 10%;
 			padding: 0 10px;
 			.btn{
-				margin-right: 10px;
+				width: 24px;
+				height: 24px;
+				margin: 4px 10px 0 0;
 				&:hover{
-					color: #000;
+					background-color: #3eb6e3;
+					border-radius: 3px;
 				}
+			}
+			.act-edit{
+				background-image: url(../../assets/images/pic/ico-edit.png);
+			}
+			.act-deleted{
+				background-image: url(../../assets/images/pic/ico-delete.png);
 			}
 		}
 	}

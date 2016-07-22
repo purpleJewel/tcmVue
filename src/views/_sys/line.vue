@@ -22,10 +22,6 @@
 			:clz="grid.clz" 
 			:title="grid.title"
 			:has-checkbox="hasCheckbox"
-			:paginative="grid.paginative"
-			:date-picker="grid.datePicker"
-			:search="grid.search"
-			:sequence="grid.sequence"
 			:headers="headers" 
 			:columns="columns" 
 			:tools="tools"
@@ -46,6 +42,8 @@
 <script>
 	import grid from '../../components/grid/grid.vue';
 	import dialog from '../../components/dialog.vue';
+	import Const from '../../libs/const.js';
+	import Utils from '../../libs/utils.js';
 
 	const Caller = TCM.Global.sysCaller;
 
@@ -58,10 +56,6 @@
 				grid: {
 					clz: 'sys-line',
 					title: '线路和车站管理',
-					sequence: '编号',
-					paginative: false,
-					datePicker: false,
-					search: false,
 					getData (params, cbFn) {
 						Caller('getAllSites', _.merge({}, params), cbFn);
 					}
@@ -83,13 +77,13 @@
 			},
 			headers () { 
 				if (window.PTSD) 
-					return ['标识号','名字', '类型', 'IP地址', '管辖状态', '说明'];
-				return ['标识号','名字', '类型', 'IP地址', '说明'];
+					return ['编号', '标识号','名字', '类型', 'IP地址', '管辖状态', '说明'];
+				return ['编号', '标识号','名字', '类型', 'IP地址', '说明'];
 			},
 			columns () { 
 				if (window.PTSD) 
-					return ['id','name', 'type', 'ip', 'selected', 'desc'];
-				return ['id','name', 'type', 'ip', 'desc'];
+					return ['no', 'id','name', 'type', 'ip', 'selected', 'desc'];
+				return ['no', 'id','name', 'type', 'ip', 'desc'];
 			},
 			tools () { 
 				const _self = this;
@@ -120,22 +114,6 @@
 				alert('setSiteName');
 			},
 			okFn () {},
-			/**
-			 * [getDialog description]
-			 * @param  {[object]} cfg {
-			 *   clz,
-			 *   title,
-			 *   content,
-			 *   unit: {
-			 *   	id, 
-			 *   	name,
-			 *   	properties: [
-			 *   		{key, name, value, [type, list]}
-			 *   	]
-			 *   }
-			 * }
-			 * @return {[type]}     [description]
-			 */
 			getDialog (cfg) {
 				for (let key in this.dialog) {
 					this.dialog[key] = cfg[key];
@@ -145,29 +123,51 @@
 			refresh (cbFn) {
 				cbFn();
 			},
+			changeSite (params, clz, title, callerName, cbFn) {
+				params.dropdownArr = ['type'];
+				params.dropdownList = {
+					type: (() => {
+						const arr = [];
+						for (let key in Const.SiteTypeNameHT) {
+							arr.push({name: Const.SiteTypeNameHT[key], value: key});
+						}
+						return arr;
+					})()
+				};
+				this.getDialog({
+					clz: clz,
+					title: title,
+					unit: params
+				});
+				this.okFn = () => {
+					let msg = Utils.validator(params, this.dialog.clz);
+					if (msg)
+						return;
+					delete params.dropdownArr;
+					delete params.dropdownList;
+					Caller(callerName, params, () => {
+						this.dialog.show = false;
+						cbFn();
+					});
+				};
+			},
 			create (cbFn) {
 				const unit = {
 					id: '',
+					no: '',
 					name: '',
-					properties: [
-						{key: 'name', name:'下拉', value: '123', type: 'dropdown', list: [
-							{name:'名字', value: '546546'},
-							{name:'名字', value: '561'},
-							{name:'名字', value: '98754'},
-							{name:'名字', value: '84235465'},
-						]},
-						{key: 'type', name:'类型', value: '789'}
-					]
+					type: '',
+					ip: '',
+					desc: ''
 				};
-				this.getDialog({
-					clz: 'create-site',
-					title: '新建站点',
-					unit: unit
+				this.changeSite(unit, 'create-site', '新建站点', 'createSite', cbFn);
+			},
+			edit (cbFn, item) {
+				Caller('getSite', {id: item.id}, (result) => {
+					delete result.lineId;
+					delete result.selected;
+					this.changeSite(result, 'create-site', '修改站点', 'editSite', cbFn);
 				});
-				this.okFn = () => {
-					console.log(unit);
-					// cbFn();
-				};
 			},
 			deleted (cbFn, selected) {
 				const ids = _.isArray(selected) ? selected : [selected.id];
@@ -184,16 +184,13 @@
 				};
 			},
 			copy (cbFn) {
-				alert('copy');
-				cbFn();
+				const unit = {ip: ''};
+				this.changeSite(unit, 'copy-site', '拷贝站点', 'copySite', cbFn);
 			},
 			affiliate (cbFn) {
 				alert('affiliate');
 				cbFn();
-			},
-			edit (cbFn, item) {
-				cbFn();
-			},
+			}
 		},
 		components: {
 			grid,
@@ -205,11 +202,6 @@
 	}
 </script>
 <style lang="less">
-	.line{
-		.pro-id{
-			display: inline-block;
-		}
-	}
 	#body{
 		margin-top: 30px;
 	}
@@ -279,6 +271,16 @@
 		.btn-copy{
 			width: 125px;
 			background-image: url(../../assets/images/pic/btn-copy.png);
+		}
+	}
+	.create-site{
+		.pro-id{
+			display: block;
+		}
+	}
+	.copy-site{
+		.content{
+			.label{width: 100px;}
 		}
 	}
 </style>

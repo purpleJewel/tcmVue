@@ -24,9 +24,9 @@
           </div>
         </div>
         <div class="datepicker-time">
-        	时间：<input type="text" v-model="hour" @keyup="timeKey(23)" @focus="focus = 'hour'"> :
-        	<input type="text"  v-model="minute" @keyup="timeKey(59)" @focus="focus = 'minute'"> :
-        	<input type="text" v-model="second" @keyup="timeKey(59)" @focus="focus = 'second'"> 
+        	Time: <input type="text" v-model="hour" @keydown="timeKeyDown" @keyup="timeKeyUp(23)" @focus="focus = 'hour'"> :
+        	<input type="text"  v-model="minute" @keydown="timeKeyDown" @keyup="timeKeyUp(59)" @focus="focus = 'minute'"> :
+        	<input type="text" v-model="second" @keydown="timeKeyDown" @keyup="timeKeyUp(59)" @focus="focus = 'second'"> 
         	<!-- <span class="icons">
         		<a @click="changeTime(1)">
         			<span class="dt-prev"></span>
@@ -152,7 +152,14 @@ export default {
         this.displayDayView = !this.displayDayView
       }
     },
+    filterKey (key) {
+      if (_.indexOf(['Backspace', 'Escape', 'Tab', 'F5'], key) > -1)
+        return true;
+      return false;
+    },
     inputKeydown() {
+      if (this.filterKey(event.key)) 
+        return;
       event.returnValue = false
     },
     setTime (data) {
@@ -169,10 +176,14 @@ export default {
   		else
   			this.currDate = new Date(year, months, date, hour, minute, data || second)
     },
-    timeKey (max) {
-  		const value = event.target.value
-  		if (!Number(value))
-  			event.returnValue = false
+    timeKeyDown () {
+      if (this.filterKey(event.key)) 
+        return;
+  		if (_.isNaN(Number(event.key)))
+  			return event.returnValue = false
+    },
+    timeKeyUp (max) {
+      const value = event.target.value
   		const data = Math.min(Number(value), max)
   		event.target.value = ('0' + data).slice(-2)
   		this.setTime(data)
@@ -385,7 +396,7 @@ input.datepicker-input.with-reset-button {
 }
 div.datepicker > button.close {
   position: absolute;
-  top: calc(50% - 11px);
+  top: calc(20% - 7px);
   right: 10px;
 }
 div.datepicker > button.close {
@@ -510,6 +521,12 @@ div.datepicker > button.close:focus {
 		border: 1px solid #ccc;
 		height: 25px;
 		border-radius: 3px;
+    transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+    &:focus{
+      border-color: #66afe9;
+      outline: 0;
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 3px rgba(102, 175, 233, 0.6);
+    }
 	}
 	/* .icons{
 		display: inline-block;

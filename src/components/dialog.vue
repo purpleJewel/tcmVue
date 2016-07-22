@@ -1,22 +1,33 @@
 <template>
 <div class="dialog-mask" v-show="show" transition="fade">
-	<div class="nv-dialog-inner">
+	<div class="nv-dialog-inner {{clz}}">
 		<div class="nv-title">{{title}}</div>
-		<div class="content {{clz}}">
+		<div class="content">
 			<slot name="content"></slot>
 			<ul v-if="unit">
-				<li class="pro-{{$key}} property" v-if="$key != 'properties'" v-for="property of unit">
-					<label class="label" for="{{$key}}">{{$key | getDialogName property clz}} :</label>
+				<li class="pro-{{$key}} property" v-if="defaultFilter($key) && !isDropdown($key)" v-for="property of unit">
+					<label class="label" for="{{$key}}">{{$key | getDialogTitle property clz}} :</label>
 					<input type="text" name="{{$key}}" v-model="property">
 				</li>
+				<li class="pro-{{$key}} property" v-if="defaultFilter($key) && isDropdown($key)" v-for="property of unit">
+					<label class="label" for="{{$key}}">{{$key | getDialogTitle property clz}} :</label>
+					<dropdown
+						:key="$key"
+						:name="getDropName(property, unit.dropdownList[$key])"
+						:value="property"
+						:list="unit.dropdownList[$key]"
+						@check-fn="defaultCheck"
+					></dropdown>
+				</li>
 				<li class="pro-{{property.key}} property" v-if="unit.properties && !property.type" v-for="property of unit.properties">
-					<label class="label" for="{{property.key}}">{{property.name}} :</label>
+					<label class="label" for="{{property.key}}">{{property.title}} :</label>
 					<input name="{{property.key}}" v-model="property.value">
 				</li>
 				<li class="pro-{{property.key}} property" v-if="unit.properties && property.type == 'dropdown'" v-for="property of unit.properties">
-					<label class="label" for="{{property.key}}">{{property.name}} :</label>
+					<label class="label" for="{{property.key}}">{{property.title}} :</label>
 					<dropdown
 						:key="property.key"
+						:name="getDropName(property.value, property.list)"
 						:value="property.value"
 						:list="property.list"
 						@check-fn="checkFn"
@@ -37,9 +48,13 @@
 	 *   clz,			//class
 	 *   title,			//显示title
 	 *   content,		//插槽内容
-	 *   unit: {		//对象的属性input
+	 *   unit: {		//对象的属性input/dropdown
 	 *   	id, 
 	 *   	name,
+	 *   	dropdownArr,
+	 *    	dropdownList: {
+	 *   	  type: []
+	 *      },
 	 *   	properties: [
 	 *   		{key, name, value, [type, list]}
 	 *   	]
@@ -48,6 +63,24 @@
 	export default {
 		props: ['clz', 'title', 'unit', 'show'],
 		methods: {
+			defaultFilter (key) {
+				if (key != 'properties' && key != 'dropdownArr' && key != 'dropdownList')
+					return true;
+				return false;
+			},
+			isDropdown (key) {
+				if (_.indexOf(this.unit.dropdownArr, key) > -1)
+					return true;
+				return false;
+			},
+			getDropName (value, list) {
+				if (!value) return '';
+				const arr = _.filter(list, (item, idx) => value == item.value);
+				return arr[0].name;
+			},
+			defaultCheck (key, value) {
+				this.unit[key] = value;
+			},
 			checkFn (key, value) {
 				this.unit.properties.forEach((item, idx) => {
 					if (item.key == key) 
@@ -77,10 +110,10 @@
 	min-width: 350px;
 	position: relative;
 	display: inline-block;
-	margin: 280px auto;
 	border-radius: 7px;
 	font-size: 12px;
 	line-height: 30px;
+	margin-top: 200px;
 	vertical-align: middle;
 	box-shadow: 0 10px 30px rgba(0, 0, 0, .44);
 	transition: all .3s ease;

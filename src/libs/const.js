@@ -1,5 +1,5 @@
 exports.SiteTypes = {TCC : 0, OCC: 1, Depot: 2, Station: 3, BOCC: 4, LinePolice: 5, PTSD:6};
-exports.SiteTypeNames = ["指挥中心", "控制中心", "车辆段／停车场", "车站", "备用控制中心", "公安派出所", "公交总队"];
+exports.SiteTypeNameHT = {0: "指挥中心", 1: "控制中心", 2: "车辆段／停车场", 3: "车站", 4: "备用控制中心", 5: "公安派出所", 6: "公交总队"};
 exports.UserTypes = {Super: 0, Admin:1, User :2};
 exports.UserTypeNames = ["超级用户", "管理员", "普通用户"];
 exports.DeviceTypes = {

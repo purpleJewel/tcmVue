@@ -44,15 +44,25 @@ Test.timingSetting = (params) => {
 function getRandonItem(arr){
 	return arr[Math.floor(Math.random() * arr.length)];
 }
-function getPagedData(arr, pageNo, pageSize){
-	return {
-		total : arr.length,
-		items : IX.partLoop(arr, pageNo* pageSize, pageNo*pageSize + pageSize, [], function(acc, item){acc.push(item); return acc;})
-	};
+function getOneInArr(params, arr){
+	let _index = '';
+	arr.forEach((item, idx) => {
+		if (item.id == params.id)
+			_index = idx;
+	})
+	return arr[_index];
+}
+function editOneInArr(params, arr){
+	let _index = '';
+	arr.forEach((item, idx) => {
+		if (item.id == params.id)
+			_index = idx;
+	})
+	arr[_index] = params;
 }
 
 var SiteTypes = Const.SiteTypes;
-var SiteTypeNames = Const.SiteTypeNames;
+var SiteTypeNameHT = Const.SiteTypeNameHT;
 var UserRoles = [ 
 ["TCC 调度员",					SiteTypes.TCC, true],
 
@@ -108,7 +118,21 @@ Test.getAllSites = () => {
 		total: Sites.length,
 		data: Sites
 	};
-}
+};
+
+Test.createSite = (params) => {
+	params.lineId = 1;
+	Sites.push(params);
+};
+
+Test.getSite = (params) => {
+	return getOneInArr(params, Sites);
+};
+
+Test.editSite = (params) => {
+	editOneInArr(params, Sites);
+};
+
 Test.deletedSites = (params) => {
 	var arr = _.difference(siteIds, params.ids);
 	if (arr.length === 0) 
@@ -120,4 +144,8 @@ Test.deletedSites = (params) => {
 	}, []);
 	Sites = arr1;
 	return Sites;
-}
+};
+
+Test.copySite = (params) => {
+	
+};

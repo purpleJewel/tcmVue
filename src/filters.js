@@ -26,7 +26,7 @@ exports.getGridValue = (key, value, clz) => {
     const CustomSysLine = (key, value) => {
         switch (key) {
             case 'type':
-                return TcmConst.SiteTypeNames[value];
+                return TcmConst.SiteTypeNameHT[value];
                 break;
             case 'selected':
                 return value ? '<span class="tick"></span>' : '';
@@ -46,23 +46,31 @@ exports.getGridValue = (key, value, clz) => {
     }
 };
 
-exports.getDialogName = (key, value, clz) => {
+exports.getDialogTitle = (key, value, clz) => {
     const CreateSite = (key, value) => {
         switch (key) {
             case 'id':
                 return '标识号';
-                break;
+            case 'no':
+                return '编号';
             case 'name':
-                return '站点名';
-                break;
+                return '名称';
+            case 'type':
+                return '类型';
+            case 'ip':
+                return 'IP地址';
+            case 'desc':
+                return '说明';
             default:
                 return value;
-                break;
         }
     };
     switch (clz) {
         case 'create-site':
             return CreateSite(key, value);
+            break;
+        case 'copy-site':
+            return '数据源站点IP';
             break;
         default:
             return value;

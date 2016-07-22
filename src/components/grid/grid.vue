@@ -79,7 +79,8 @@
 	 * 		}				
 	 * 		datePicker,			//是否显示日历搜索
 	 * 		search,				//是否显示时搜索框
-	 * 		sequence,			//显示序号名
+	 * 		sequence,			//显示自动排序--名字
+	 * 		paginative,			//boolean
 	 * 		headers: [],		//对应columns的显示
 	 * 		columns: [],		//表格显示列
 	 * 		items: [			//表格显示数据
@@ -90,7 +91,6 @@
 	 * 				...
 	 * 			}
 	 * 		},
-	 * 		paginative,			//boolean
 	 * 		getData (params, cbFn) {
 				Caller('name', _.merge({s: 1}, params), cbFn);
 			}
@@ -101,11 +101,23 @@
 		props: {
 			title: String,
 			clz: String,
-			paginative: Boolean,
-			datePicker: Boolean,
-			search: Boolean,
+			paginative: {
+				type: Boolean,
+				default: false
+			},
+			datePicker: {
+				type: Boolean,
+				default: false
+			},
+			search: {
+				type: Boolean,
+				default: false
+			},
+			hasCheckbox: {
+				type: Boolean,
+				default: false
+			},
 			tools: Object,
-			hasCheckbox: Boolean,
 			sequence: null,
 			headers: Array,
 			columns: Array,
@@ -122,7 +134,7 @@
 				},
 				selectArr: [],
 
-				format: "yyyy-MM-dd hh:mm:ss",
+				format: "yyyy-MM-dd hh:mm",
 				reset: true
 			};
 		},
@@ -255,6 +267,8 @@
 			.date-picker{
 				display: inline-block;
 				color: #666;
+				vertical-align: top;
+				margin-top: 2px;
 			}
 			.okDate{
 				width: 50px;

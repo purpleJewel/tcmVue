@@ -2,6 +2,15 @@
 
 let _ = require('lodash');
 
+/**
+ * 验证表单提交
+ * @param  {[Object]} data [description]
+ * @param  {[String]} clz  [description]
+ * @return {[Boolean]}      [验证不成功返回提示语，成功返回false]
+ */
+exports.validator = (data, clz) => {
+    return false;
+};
 
 let getCheck = {
     checkEmail: function(val) {

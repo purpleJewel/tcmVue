@@ -32,14 +32,56 @@ TCM.Global.sysCaller = (name, params, cbFn, failFn) => {
 	switch (name) {
 		case 'getAllSites':
 			/**
-			 * 登录系统
+			 * 进入线路页面
 			 * @param  {} ( [description]
-			 * @return {siteId, siteName, siteType, userName, userId, userType, lineName}   [description]
+			 * @return {
+			 *         total,
+			 *         data: [
+			 *         	{id, no, type, name, ip, selected, desc}
+			 *         ]
+			 * }   [description]
 			 */
 			setTimeout(() => {cbFn(Test.getAllSites(params));}, 200);
 			break;
+		case 'getSite':
+			/**
+			 * 添加站点
+			 * @param  {id} ( [description]
+			 * @return {id, no, type, name, ip, desc}   [description]
+			 */
+			setTimeout(() => {cbFn(Test.getSite(params));}, 200);
+			break;
+		case 'createSite':
+			/**
+			 * 添加站点
+			 * @param  {id, no, type, name, ip, desc} ( [description]
+			 * @return {}   [description]
+			 */
+			setTimeout(() => {cbFn(Test.createSite(params));}, 200);
+			break;
+		case 'editSite':
+			/**
+			 * 修改站点
+			 * @param  {id, no, type, name, ip, desc} ( [description]
+			 * @return {}   [description]
+			 */
+			setTimeout(() => {cbFn(Test.editSite(params));}, 200);
+			break;
 		case 'deletedSites':
+			/**
+			 * 删除站点
+			 * @param  {ids: []} ( [description]
+			 * @return {}   [description]
+			 */
 			setTimeout(() => {cbFn(Test.deletedSites(params));}, 200);
+			break;
+		case 'copySite':
+			/**
+			 * 删除站点
+			 * @param  {id} ( [description]
+			 * @return {}   [description]
+			 */
+			setTimeout(() => {cbFn(Test.copySite(params));}, 200);
 			break;
 	}
 };
