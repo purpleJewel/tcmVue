@@ -30,6 +30,14 @@ TCM.Global.common = (name, params, cbFn, failFn) => {
 
 TCM.Global.sysCaller = (name, params, cbFn, failFn) => {
 	switch (name) {
+		case 'setSite':
+			/**
+			 * 设置管辖站点
+			 * @param  {id} ( [description]
+			 * @return {}   [description]
+			 */
+			setTimeout(() => {cbFn(Test.setSite(params));}, 200);
+			break;
 		case 'getAllSites':
 			/**
 			 * 进入线路页面
@@ -77,11 +85,67 @@ TCM.Global.sysCaller = (name, params, cbFn, failFn) => {
 			break;
 		case 'copySite':
 			/**
-			 * 删除站点
-			 * @param  {id} ( [description]
+			 * 复制站点信息
+			 * @param  {ip} ( [description]
 			 * @return {}   [description]
 			 */
 			setTimeout(() => {cbFn(Test.copySite(params));}, 200);
+			break;
+		case 'getAffiliateSites':
+			/**
+			 * 获取可管辖站点
+			 * @param  {} ( [description]
+			 * @return {sites: [{id, name, type, selected}]}   [description]
+			 */
+			setTimeout(() => {cbFn(Test.getAffiliateSites(params));}, 200);
+			break;
+		case 'setAffiliateSites':
+			/**
+			 * 设置管辖站点
+			 * @param  {ids: []} ( [description]
+			 * @return {}   [description]
+			 */
+			setTimeout(() => {cbFn(Test.setAffiliateSites(params));}, 200);
+			break;
+		case 'getRoles':
+			/**
+			 * 进入角色管理页面
+			 * @param  {} ( [description]
+			 * @return {total, data: [{id, name, promptable, siteType}]}   [description]
+			 */
+			setTimeout(() => {cbFn(Test.getRoles(params));}, 200);
+			break;
+		case 'getRole':
+			/**
+			 * 获取角色信息
+			 * @param  {} ( [description]
+			 * @return {id, name, promptable, siteType}   [description]
+			 */
+			setTimeout(() => {cbFn(Test.getRole(params));}, 200);
+			break;
+		case 'createRole':
+			/**
+			 * 新建角色
+			 * @param  {name, promptable, siteType} ( [description]
+			 * @return {}   [description]
+			 */
+			setTimeout(() => {cbFn(Test.createRole(params));}, 200);
+			break;
+		case 'editRole':
+			/**
+			 * 修改角色
+			 * @param  {id, name, promptable, siteType} ( [description]
+			 * @return {}   [description]
+			 */
+			setTimeout(() => {cbFn(Test.editRole(params));}, 200);
+			break;
+		case 'deletedRoles':
+			/**
+			 * 删除角色
+			 * @param  {ids: []} ( [description]
+			 * @return {}   [description]
+			 */
+			setTimeout(() => {cbFn(Test.deletedRoles(params));}, 200);
 			break;
 	}
 };

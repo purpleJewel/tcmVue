@@ -13,7 +13,7 @@
 			<div>
 				<span class="label">当前单位：</span>
 				<input type="text" class="site-name" disabled="true" value="{{siteName}}">
-				<a class="set-siteName" @click="setSiteName" v-if="!siteName"></a>
+				<a class="set-siteName" @click="setSite" v-if="!siteName"></a>
 			</div>
 		</div>
 	</div>
@@ -34,6 +34,7 @@
 		:clz="dialog.clz"
 		:title="dialog.title"
 		:unit.sync="dialog.unit" 
+		@check-site="setAffiliateSite"
 		@ok-fn="okFn">
 		<div slot="content">{{dialog.content}}</div>
 	</dialog>
@@ -49,10 +50,10 @@
 
 	export default {
 		data () {
-			let _self = this;
 			return {
 				lineName: localStorage.lineName,
 				siteName: localStorage.siteName,
+				affiliateSites: [],
 				grid: {
 					clz: 'sys-line',
 					title: '线路和车站管理',
@@ -70,6 +71,7 @@
 			};
 		},
 		computed: {
+			//获取grid配置数据，并判断权限
 			hasCheckbox () { 
 				if (window.Super || window.OCC) 
 					return true;
@@ -110,68 +112,115 @@
 			}
 		},
 		methods: {
-			setSiteName () {
-				alert('setSiteName');
+			//设置当前站点
+			setSite () {
+				Caller('getAllSites', {}, (result) => {
+					const unit = {
+						id: '',
+						dropdownArr: ['id'],
+						dropdownList: {
+							id: _.map(result.data, (site) => {return {name: site.name, value: site.id};})
+						}
+					};
+					this.showDialog({
+						clz: 'set-site', 
+						title: '设置当前站点', 
+						callerName: 'setSite',
+						content: '只能设置一次，请慎重！(修改后需重新登录)',
+						unit: unit
+					});
+					this.okFn = () => {
+						delete unit.dropdownArr;
+						delete unit.dropdownList;
+						Caller('setSite', unit, window.refreshView);
+					};
+				});
 			},
+			//用于监听dialog的checkbox选择事件
+			setAffiliateSite (key, status) {
+				if (status) 
+					return this.affiliateSites.push(key);
+				this.affiliateSites.splice(_.indexOf(this.affiliateSites, key), 1);
+			},
+			//default dialog okFn
 			okFn () {},
-			getDialog (cfg) {
+			showDialog (cfg) {
 				for (let key in this.dialog) {
 					this.dialog[key] = cfg[key];
 				}
 				this.dialog.show = true;
 			},
-			refresh (cbFn) {
-				cbFn();
+			//获取设置dialog中dropdownArr后的对象
+			getDropDown (clz, unit) {
+				if (clz == 'create-site' || clz == 'edit-site') {
+					unit.dropdownArr = ['type'];
+					unit.dropdownList = {
+						type: (() => {
+							const arr = [];
+							for (let key in Const.SiteTypeNameHT) {
+								arr.push({name: Const.SiteTypeNameHT[key], value: key});
+							}
+							return arr;
+						})()
+					};
+					return unit;
+				}
+				return unit;
 			},
-			changeSite (params, clz, title, callerName, cbFn) {
-				params.dropdownArr = ['type'];
-				params.dropdownList = {
-					type: (() => {
-						const arr = [];
-						for (let key in Const.SiteTypeNameHT) {
-							arr.push({name: Const.SiteTypeNameHT[key], value: key});
-						}
-						return arr;
-					})()
-				};
-				this.getDialog({
-					clz: clz,
-					title: title,
-					unit: params
+			//dialog配置及设置提交函数
+			useDialog4Tool (cfg, cbFn) {
+				cfg.params = this.getDropDown(cfg.clz, cfg.params);
+				this.showDialog({
+					clz: cfg.clz,
+					title: cfg.title,
+					unit: cfg.params
 				});
 				this.okFn = () => {
-					let msg = Utils.validator(params, this.dialog.clz);
+					let msg = Utils.validator(cfg.params, this.dialog.clz);
 					if (msg)
 						return;
-					delete params.dropdownArr;
-					delete params.dropdownList;
-					Caller(callerName, params, () => {
+					delete cfg.params.dropdownArr;
+					delete cfg.params.dropdownList;
+					Caller(cfg.callerName, cfg.params, () => {
 						this.dialog.show = false;
 						cbFn();
 					});
 				};
 			},
-			create (cbFn) {
-				const unit = {
-					id: '',
-					no: '',
-					name: '',
-					type: '',
-					ip: '',
-					desc: ''
-				};
-				this.changeSite(unit, 'create-site', '新建站点', 'createSite', cbFn);
+			//表格刷新
+			refresh (cbFn) {
+				cbFn();
 			},
+			//创建站点
+			create (cbFn) {
+				let unit = _.reduce(['id', 'no', 'name', 'type', 'ip', 'desc'], (acc, item, idx) => {
+					acc[item] = '';
+					return acc;
+				}, {});
+				this.useDialog4Tool({
+					clz: 'create-site',
+					title: '新建站点',
+					callerName: 'createSite',
+					params: unit
+				}, cbFn);
+			},
+			//修改站点
 			edit (cbFn, item) {
 				Caller('getSite', {id: item.id}, (result) => {
 					delete result.lineId;
 					delete result.selected;
-					this.changeSite(result, 'create-site', '修改站点', 'editSite', cbFn);
+					this.useDialog4Tool({
+						clz: 'create-site', 
+						title: '修改站点', 
+						callerName: 'editSite',
+						params:result
+					}, cbFn);
 				});
 			},
+			//删除站点
 			deleted (cbFn, selected) {
 				const ids = _.isArray(selected) ? selected : [selected.id];
-				this.getDialog({
+				this.showDialog({
 					clz: 'deleted-site',
 					title: '删除站点',
 					content: '是否删除选中站点？'
@@ -183,28 +232,44 @@
 					});
 				};
 			},
+			//复制站点数据
 			copy (cbFn) {
-				const unit = {ip: ''};
-				this.changeSite(unit, 'copy-site', '拷贝站点', 'copySite', cbFn);
+				this.useDialog4Tool({
+					clz: 'copy-site', 
+					title: '拷贝站点', 
+					callerName: 'copySite',
+					params: {ip: ''}
+				}, cbFn);
 			},
+			//设置管辖站点
 			affiliate (cbFn) {
-				alert('affiliate');
-				cbFn();
+				Caller('getAffiliateSites', {}, (result) => {
+					this.affiliateSites = _.reduce(result, (acc, site, idx) => {
+						if (site.selected)
+							acc.push(site.id);
+						return acc;
+					}, []);
+					this.showDialog({
+						clz: 'affiliate-site',
+						title: '管辖车站配置',
+						unit: {checkboxList: _.map(result, (site, idx) => _.merge(site, {key: site.id, text: site.name}))}
+					});
+					this.okFn = () => {
+						Caller('setAffiliateSites', {ids: this.affiliateSites}, () => {
+							this.dialog.show = false;
+							cbFn();
+						});
+					};
+				});
 			}
 		},
 		components: {
 			grid,
 			dialog
-		},
-		ready () {
-
 		}
 	}
 </script>
 <style lang="less">
-	#body{
-		margin-top: 30px;
-	}
 	.sys-info{
 		input{
 			text-indent: 10px;
@@ -273,7 +338,7 @@
 			background-image: url(../../assets/images/pic/btn-copy.png);
 		}
 	}
-	.create-site{
+	.create-site, .set-site{
 		.pro-id{
 			display: block;
 		}
@@ -281,6 +346,23 @@
 	.copy-site{
 		.content{
 			.label{width: 100px;}
+		}
+	}
+	.set-site{
+		.content{
+			.label{width: 70px;}
+		}
+	}
+	.affiliate-site{
+		width: 350px;
+		.content{
+			overflow: hidden;
+			.pro-checkbox{
+				margin: 0 0 0 28px;
+				width: 140px;
+				float: left;
+				text-align: left;
+			}
 		}
 	}
 </style>

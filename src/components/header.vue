@@ -43,14 +43,8 @@
 				this.confirm.txt = '确定退出系统？';
 			},
 			confirmOk () {
-				for (let key in localStorage) {
-					localStorage.removeItem(key);
-				}
 				TCM.Global.common('logout', {}, () => {
-				    window.OCC = null;    
-				    window.PTSD = null;
-				    window.Super = null;
-					this.$route.router.go({ name: 'entry'});
+					window.refreshView();
 				});
 			}
 		},

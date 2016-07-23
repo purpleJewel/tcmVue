@@ -79,3 +79,13 @@ routerConfig(router);
 router.start(App, "#app");
 
 window.router = router;
+
+window.refreshView = () => {
+    for (let key in localStorage) {
+        localStorage.removeItem(key);
+    }
+    window.OCC = null;    
+    window.PTSD = null;
+    window.Super = null;
+    router.go({ name: 'entry'});
+}

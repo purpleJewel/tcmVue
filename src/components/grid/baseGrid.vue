@@ -121,17 +121,21 @@
 				border-right: 1px solid #fff;
 				height: 30px;
 			}
+			.col-_check{
+				padding-top: 1px;
+			}
 		}
 		[class^="col-"] {
 			display: inline-block;
 			text-align: center;
 			vertical-align: middle;
 			min-width: 56px;
-			height: 35px;
+			height: 33px;
 			line-height: 35px;
 			padding: 0px 8px;
 		}
 		.col-_check{
+			padding-top: 2px;
 			min-width: 20px;
 		}
 		.t-body{

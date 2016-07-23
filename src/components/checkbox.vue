@@ -1,7 +1,7 @@
 <template>
 <a class="checkbox-a" data-key="{{key}}" @click="f()">
 	<span class="checkbox {{selected ? 'selected' : ''}}"></span>
-	<span class="label" v-text="text"></span>
+	<span class="text" v-text="text"></span>
 </a>
 </template>
 <script>
@@ -23,10 +23,10 @@
 			cursor: pointer;
 			width: 16px;
 			height: 16px;
-			min-height: 16px;
-			margin-top: 9px;
+			margin-top: 8px;
 			margin-left: 4px;
 			display: inline-block;
+			vertical-align: top;
 			background: url(../assets/images/ixpic/cb-uncheck.png) no-repeat;
 		}
 		.selected{

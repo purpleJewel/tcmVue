@@ -36,9 +36,25 @@ exports.getGridValue = (key, value, clz) => {
                 break;
         }
     };
+    const CustomSysRole = (key, value) => {
+        switch (key) {
+            case 'siteType':
+                return TcmConst.SiteTypeNameHT[value];
+                break;
+            case 'promptable':
+                return value ? '允许' : '';
+                break;
+            default:
+                return value;
+                break;
+        }
+    };
     switch (clz) {
         case 'sys-line':
             return CustomSysLine(key, value);
+            break;
+        case 'sys-role':
+            return CustomSysRole(key, value);
             break;
         default:
             return value;
@@ -65,6 +81,16 @@ exports.getDialogTitle = (key, value, clz) => {
                 return value;
         }
     };
+    const CreateRole = (key, value) => {
+        switch (key) {
+            case 'name':
+                return '角色名称';
+            case 'siteType':
+                return '所属单位类型';
+            default:
+                return value;
+        }
+    };
     switch (clz) {
         case 'create-site':
             return CreateSite(key, value);
@@ -72,6 +98,12 @@ exports.getDialogTitle = (key, value, clz) => {
         case 'copy-site':
             return '数据源站点IP';
             break;
+        case 'set-site':
+            return '当前站点';
+            break;
+        case 'create-role':
+            return CreateRole(key, value);
+            break;   
         default:
             return value;
             break;

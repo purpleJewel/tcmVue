@@ -11,13 +11,21 @@
 				</li>
 				<li class="pro-{{$key}} property" v-if="defaultFilter($key) && isDropdown($key)" v-for="property of unit">
 					<label class="label" for="{{$key}}">{{$key | getDialogTitle property clz}} :</label>
-					<dropdown
+					<drop-down
 						:key="$key"
 						:name="getDropName(property, unit.dropdownList[$key])"
 						:value="property"
 						:list="unit.dropdownList[$key]"
 						@check-fn="defaultCheck"
-					></dropdown>
+					></drop-down>
+				</li>
+				<li class="pro-checkbox property" v-if="unit.checkboxList" v-for="property of unit.checkboxList">
+					<check-box
+						:selected="property.selected"
+						:key="property.key"
+						:text="property.text"
+						@selected="selected"
+					></check-box>
 				</li>
 				<li class="pro-{{property.key}} property" v-if="unit.properties && !property.type" v-for="property of unit.properties">
 					<label class="label" for="{{property.key}}">{{property.title}} :</label>
@@ -25,13 +33,13 @@
 				</li>
 				<li class="pro-{{property.key}} property" v-if="unit.properties && property.type == 'dropdown'" v-for="property of unit.properties">
 					<label class="label" for="{{property.key}}">{{property.title}} :</label>
-					<dropdown
+					<drop-down
 						:key="property.key"
 						:name="getDropName(property.value, property.list)"
 						:value="property.value"
 						:list="property.list"
 						@check-fn="checkFn"
-					></dropdown>
+					></drop-down>
 				</li>
 			</ul>
 		</div>
@@ -43,20 +51,22 @@
 </div>
 </template>
 <script>
-	import dropdown from '../components/dropdown.vue';
+	import dropDown from '../components/dropdown.vue';
+	import checkBox from '../components/checkbox.vue';
 	/*
 	 *   clz,			//class
 	 *   title,			//显示title
 	 *   content,		//插槽内容
 	 *   unit: {		//对象的属性input/dropdown
-	 *   	id, 
-	 *   	name,
-	 *   	dropdownArr,
+	 *   	id, 		//基础属性
+	 *   	name,		
+	 *   	checkboxList: [{key, text, selected}]	//所有的checkbox数组
+	 *   	dropdownArr: [],	//使用dropdown类型的基础属性key
 	 *    	dropdownList: {
-	 *   	  type: []
+	 *   	  $key: [{name, value}]
 	 *      },
-	 *   	properties: [
-	 *   		{key, name, value, [type, list]}
+	 *   	properties: [		//私有属性数组，便于后台数据库存储
+	 *   		{key, name, value, [type, list: [{name, value}]]}
 	 *   	]
 	 *   }
 	 */
@@ -64,7 +74,7 @@
 		props: ['clz', 'title', 'unit', 'show'],
 		methods: {
 			defaultFilter (key) {
-				if (key != 'properties' && key != 'dropdownArr' && key != 'dropdownList')
+				if (key != 'properties' && key != 'dropdownArr' && key != 'dropdownList' && key != 'checkboxList')
 					return true;
 				return false;
 			},
@@ -74,9 +84,12 @@
 				return false;
 			},
 			getDropName (value, list) {
-				if (!value) return '';
+				if (!value && value !== 0) return '';
 				const arr = _.filter(list, (item, idx) => value == item.value);
 				return arr[0].name;
+			},
+			selected (key, status) {
+				this.$dispatch('check-site', key, status);
 			},
 			defaultCheck (key, value) {
 				this.unit[key] = value;
@@ -91,7 +104,8 @@
 			cancel () {this.show = false;}
 		},
 		components: {
-			dropdown
+			dropDown,
+			checkBox
 		}
 	}
 </script>
@@ -121,7 +135,7 @@
 		min-height: 90px;
 		background-color: #fff;
 		color: #2E3740;
-		padding: 30px 0 10px;	
+		padding: 30px 0 10px;
 	}
 	.property{
 		height: 32px;
