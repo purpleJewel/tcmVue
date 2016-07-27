@@ -1,6 +1,6 @@
 <template>
 <li>
-    <div class="t-node" v-if="model.name" :class="{bold: isFolder}" @click="toggle" :style="{paddingLeft: model.padding + 'px'}">
+    <div class="t-node" :class="[paddingList[model.tier], levelList[model.tier]]" v-if="model.name" :class="{bold: isFolder}" @click="toggle">
     	<span class="t-ico" v-if="isFolder">[{{open ? '-' : '+'}}]</span>
     	<checkbox
     		v-if="checkbox"	
@@ -14,7 +14,7 @@
 			v-for="model in model.children"
 			:model="model">
 		</item>
-		<li class="add-node" @click="addChild" v-if="model.name" :style="{paddingLeft: model.padding + 'px'}">+</li>
+		<li class="add-node" @click="addChild" v-if="model.name" :class="[paddingList[model.tier], levelList[model.tier]]">+</li>
     </ul>
 </li>
 </template>
@@ -29,6 +29,8 @@
 		},
 		data () {
 			return {
+				paddingList: ['p1', 'p2', 'p3'],
+				levelList: ['l1', 'l2', 'l3'],
 				checkbox: false,
 				open: false
 			}
@@ -97,5 +99,23 @@
 		.checkbox-a .checkbox{
 			margin: 4px;
 		}
+	}
+	.p1{
+		padding-left: 15px;
+	}
+	.p2{
+		padding-left: 30px;
+	}
+	.p3{
+		padding-left: 45px;
+	}
+	.l1{
+		background: #1e2e3d;
+	}
+	.l2{
+		background: #aaf;
+	}
+	.l3{
+		padding-left: 45px;
 	}
 </style>

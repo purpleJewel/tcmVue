@@ -76,7 +76,7 @@
 			},
 			buildTree (parent, data) {
 				let node = this.buildNode(data);
-				node.padding = parent.padding + 15;
+				node.tier = parent.tier + 1;
 				parent.setChild(node);
 				if (data.children) {
 					for(let child of data.children) {
@@ -86,7 +86,7 @@
 			},
 			createRoot () {
 				let root = new TreeNode(this.status);
-				root.padding = 0;
+				root.tier = -2;
 				this.buildTree(root, this.treeData);
 				this.root = root;
 			},
@@ -94,7 +94,7 @@
 				let node = new TreeNode();
 				node.id = 2000;
 				node.name = 'new suffix';
-				node.padding = model.padding + 15;
+				node.tier = model.tier + 1;
 				model.setChild(node);
 			}
 		},

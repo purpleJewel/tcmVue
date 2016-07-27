@@ -41,11 +41,6 @@
 			background: #334559;
 			border-radius: 0 0 5px 5px;
 			min-height: 800px;
-			.node, .root{
-				&>.t-node{
-					background: #1e2e3d;
-				}
-			}
 		}
 	}
 </style>

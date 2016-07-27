@@ -391,7 +391,7 @@ Test.timingSetting = (params) => {
 /********************设备列表*************************/
 Test.getDeviceTree = () => {
 	return {
-		id: 0,
+		id: -1,
 		name: 'My Tree',
 		children: [
 			{id: 1, name: 'hello' },
