@@ -29,8 +29,8 @@
 	export default {
 		data () {
 			return {
-				userName: localStorage.userName,
-				siteName: localStorage.siteName,
+				userName: window.getConst().userName,
+				siteName: window.getConst().siteName,
 				confirm: {
 					txt: '',
 					show: false
@@ -44,7 +44,7 @@
 			},
 			confirmOk () {
 				TCM.Global.common('logout', {}, () => {
-					window.refreshView();
+					window.logoutView();
 				});
 			}
 		},

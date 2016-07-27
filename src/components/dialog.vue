@@ -7,7 +7,7 @@
 			<ul v-if="unit">
 				<li class="pro-{{$key}} property" v-if="defaultFilter($key) && !isDropdown($key)" v-for="property of unit">
 					<label class="label" for="{{$key}}">{{$key | getDialogTitle property clz}} :</label>
-					<input type="text" name="{{$key}}" v-model="property">
+					<input :type="getInputType($key)" name="{{$key}}" v-model="property">
 				</li>
 				<li class="pro-{{$key}} property" v-if="defaultFilter($key) && isDropdown($key)" v-for="property of unit">
 					<label class="label" for="{{$key}}">{{$key | getDialogTitle property clz}} :</label>
@@ -29,7 +29,7 @@
 				</li>
 				<li class="pro-{{property.key}} property" v-if="unit.properties && !property.type" v-for="property of unit.properties">
 					<label class="label" for="{{property.key}}">{{property.title}} :</label>
-					<input name="{{property.key}}" v-model="property.value">
+					<input name="{{property.key}}" :type="getInputType(property.key)" v-model="property.value">
 				</li>
 				<li class="pro-{{property.key}} property" v-if="unit.properties && property.type == 'dropdown'" v-for="property of unit.properties">
 					<label class="label" for="{{property.key}}">{{property.title}} :</label>
@@ -54,13 +54,15 @@
 	import dropDown from '../components/dropdown.vue';
 	import checkBox from '../components/checkbox.vue';
 	/*
-	 *   clz,			//class
-	 *   title,			//显示title
-	 *   content,		//插槽内容
-	 *   unit: {		//对象的属性input/dropdown
-	 *   	id, 		//基础属性
+	 *   clz,					//class
+	 *   title,					//显示title
+	 *   content,				//插槽内容
+	 *   unit: {				//对象的属性input/dropdown
+	 *   	id, 				//基础属性
 	 *   	name,		
-	 *   	checkboxList: [{key, text, selected}]	//所有的checkbox数组
+	 *   	checkboxList: [		//所有的checkbox数组
+	 *   		{key, text, selected}
+	 *   	],	
 	 *   	dropdownArr: [],	//使用dropdown类型的基础属性key
 	 *    	dropdownList: {
 	 *   	  $key: [{name, value}]
@@ -69,10 +71,32 @@
 	 *   		{key, name, value, [type, list: [{name, value}]]}
 	 *   	]
 	 *   }
+	 *   inputTypes: [			//input的类型
+	 *   	{key, type}
+	 *   ]
 	 */
 	export default {
-		props: ['clz', 'title', 'unit', 'show'],
+		props: {
+			clz: String, 
+			title: null, 
+			unit: null,
+			show: Boolean,
+			inputTypes: {
+				type: Array,
+				default () {
+					return [];
+				} 
+			}
+		},
 		methods: {
+			getInputType (key) {
+				let type = '';
+				this.inputTypes.forEach(item => {
+					if (item.key == key)
+						return type = item.type;
+				});
+				return type || 'text';
+			},
 			defaultFilter (key) {
 				if (key != 'properties' && key != 'dropdownArr' && key != 'dropdownList' && key != 'checkboxList')
 					return true;
@@ -89,9 +113,10 @@
 				return arr[0].name;
 			},
 			selected (key, status) {
-				this.$dispatch('check-site', key, status);
+				this.$dispatch('check-checkbox', key, status);
 			},
 			defaultCheck (key, value) {
+				this.$dispatch('check-dropdown', key, value);
 				this.unit[key] = value;
 			},
 			checkFn (key, value) {

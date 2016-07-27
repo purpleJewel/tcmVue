@@ -36,7 +36,6 @@
 			:has-checkbox="hasCheckbox"
 			:sequence="sequence"
 			:headers="headers" 
-			:columns="columns" 
 			:page-no="params.pageNo"
 			:page-size="params.pageSize"
 			:items="items" 
@@ -61,12 +60,6 @@
 	import datepicker from '../Datepicker.vue';
 	import pagination from '../pagination.vue';
 
-	const defaultTools = {
-		delete () {
-			
-		}
-	};
-
 	/**
 	 * params: {
 	 * 		clz,				//表格class
@@ -81,16 +74,17 @@
 	 * 		search,				//是否显示时搜索框
 	 * 		sequence,			//显示自动排序--名字
 	 * 		paginative,			//boolean
-	 * 		headers: [],		//对应columns的显示
-	 * 		columns: [],		//表格显示列
+	 * 		headers: [			//显示表格头和列数及是否拥有width
+	 * 			titles: [],		//对应columns的显示文字
+	 *   		columns: [],	//表格显示列
+	 * 			[widths]: []	//列宽度集合
+	 * 		],
 	 * 		items: [			//表格显示数据
 	 * 			{id, name....}
 	 * 		],
-	 * 		actions: {			//对于每一列表格元素的所有操作集合
-	 * 			add: (cbFn, item) => {
-	 * 				...
-	 * 			}
-	 * 		},
+	 * 		actions: [			//对于每一列表格元素的所有操作集合
+	 * 			[key, name, (item) => {...}]
+	 * 		],			
 	 * 		getData (params, cbFn) {
 				Caller('name', _.merge({s: 1}, params), cbFn);
 			}
@@ -119,9 +113,8 @@
 			},
 			tools: Object,
 			sequence: null,
-			headers: Array,
-			columns: Array,
-			actions: Object,
+			headers: Object,
+			actions: Array,
 			getData: Function
 		},
 		data () {
@@ -155,6 +148,22 @@
 				return this.getDate(now);
 			},
 			items () {
+				const _self = this;
+				if (this.data.data) {
+					return _.reduce(this.data.data, (acc, item) => {
+						if (item.actions) {
+							let obj = _.cloneDeep(item.actions);
+							item.actions.forEach((action, idx) => {
+								obj[idx][2] = (item) => {
+									action[2](_self.cbFn, item);
+								};
+							});
+							item.actions = obj;
+						}
+						acc.push(item);
+						return acc;
+					}, []);
+				}
 				return this.data.data;
 			},
 			total () {
@@ -162,13 +171,13 @@
 			},
 			gridActions () {
 				const _self = this;
-				let actionHT = {};
-				for (let key in _self.actions) {
-					actionHT[key] = (item) => {
-						_self.actions[key](_self.cbFn, item);
+				let actionArr = _.cloneDeep(_self.actions);
+				_self.actions.forEach((action, idx) => {
+					actionArr[idx][2] = (item) => {
+						action[2](_self.cbFn, item);
 					};
-				}
-				return actionHT;
+				});
+				return actionArr;
 			}
 		},
 		methods: {

@@ -1,7 +1,6 @@
 "use strict"
 
 import utils from  './libs/utils';
-import TcmConst from './libs/const.js';
 
 /**格式化时间
  *  @param {string} time 需要格式化的时间
@@ -20,16 +19,19 @@ exports.getLastTimeStr = (time, friendly) => {
  *  @param {string} [key] [这列数据的key值]
  *  @param {string} [value] [用于显示的值]
  *  @param {string} [clz] [此表格的clz类区别]
+ *  @param {string} [title] [此表格的title区别]
+ *  @return {[string/html]}       [description]
  */
 
-exports.getGridValue = (key, value, clz) => {
+exports.getGridValue = (key, value, clz, title) => {
+    const Const = window.getConst();
     const CustomSysLine = (key, value) => {
         switch (key) {
             case 'type':
-                return TcmConst.SiteTypeNameHT[value];
+                return Const.Const.SiteTypeNamesHT[value];
                 break;
             case 'selected':
-                return value ? '<span class="tick"></span>' : '';
+                return value ? (title ? '管辖': '<span class="tick"></span>') : '';
                 break;
             default:
                 return value;
@@ -39,10 +41,20 @@ exports.getGridValue = (key, value, clz) => {
     const CustomSysRole = (key, value) => {
         switch (key) {
             case 'siteType':
-                return TcmConst.SiteTypeNameHT[value];
+                return Const.Const.SiteTypeNamesHT[value];
                 break;
             case 'promptable':
                 return value ? '允许' : '';
+                break;
+            default:
+                return value;
+                break;
+        }
+    };
+    const CustomSysUser = (key, value) => {
+        switch (key) {
+            case 'type':
+                return Const.Const.UserTypeNamesHT[value];
                 break;
             default:
                 return value;
@@ -56,12 +68,22 @@ exports.getGridValue = (key, value, clz) => {
         case 'sys-role':
             return CustomSysRole(key, value);
             break;
+        case 'sys-user':
+            return CustomSysUser(key, value);
+            break;
         default:
             return value;
             break;
     }
 };
 
+/**
+ * 显示dialog的每一项title
+ * @param  {[string]} key   [列名]
+ * @param  {[null]} value [参数]
+ * @param  {[string]} clz   [dialog的class]
+ * @return {[string]}       [description]
+ */
 exports.getDialogTitle = (key, value, clz) => {
     const CreateSite = (key, value) => {
         switch (key) {
@@ -91,6 +113,38 @@ exports.getDialogTitle = (key, value, clz) => {
                 return value;
         }
     };
+    const CreateUser = (key, value) => {
+        switch (key) {
+            case 'name':
+                return '用户名';
+            case 'account':
+                return '登录账号';
+            case 'password':
+                return '登录密码';
+            case 'account':
+                return '登录账号';
+            case 'valPwd':
+                return '确定密码';
+            case 'desc':
+                return '说明';
+            case 'type':
+                return '用户类型';
+            case 'role':
+                return '用户角色';
+            default:
+                return value;
+        }
+    };
+    const ChangePassword = (key, value) => {
+        switch (key) {
+            case 'password':
+                return '新密码';
+            case 'valPwd':
+                return '确认新密码';
+            default:
+                return value;
+        }
+    }; 
     switch (clz) {
         case 'create-site':
             return CreateSite(key, value);
@@ -103,6 +157,12 @@ exports.getDialogTitle = (key, value, clz) => {
             break;
         case 'create-role':
             return CreateRole(key, value);
+            break;
+        case 'create-user': case 'edit-user':
+            return CreateUser(key, value);
+            break;
+        case 'change-password':
+            return ChangePassword(key,value);
             break;   
         default:
             return value;

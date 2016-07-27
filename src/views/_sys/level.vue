@@ -1,10 +1,15 @@
 <template>
-	<div></div>
+<div class="sys-level">
+	
+</div>
 </template>
 <script>
-
 	export default {
-		
+		data () {
+			return {
+				
+			};
+		}
 	}
 </script>
 <style lang="less">

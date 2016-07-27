@@ -10,9 +10,15 @@
 				<span class="pic-hide"></span>
 			</a>
 		</li>
-		<li class="col-{{col}}" v-for="col of columns">
+		<li class="col-{{col}}" v-if="!headers.widths" v-for="col of headers.columns">
 			<a data-key="{{col}}">
-				<span>{{headers[$index]}}</span>
+				<span>{{headers.titles[$index]}}</span>
+				<span class="pic-hide"></span>
+			</a>
+		</li>
+		<li class="col-{{col}}" :style="{width: headers.widths[$index]+'%'}" v-if="headers.widths" v-for="col of headers.columns">
+			<a data-key="{{col}}">
+				<span>{{headers.titles[$index]}}</span>
 				<span class="pic-hide"></span>
 			</a>
 		</li>
@@ -22,10 +28,20 @@
 			<li class="col-_check" v-if="hasCheckbox">
 				<checkbox @selected="checkFn" :selected="selected(item.id)" :key="item.id"></checkbox>
 			</li>
-			<li class="col-_no" v-if="sequence">{{pageNo * pageSize + ($index + 1)}}</li>
-			<li class="col-{{key}}" v-for="key of columns">{{{key | getGridValue item[key] clz}}}</li>
-			<li class="rt col-actions">
-				<a class="btn act-{{$key}}" v-for="fn of actions" @click="fn(item)"></a>
+			<li class="col-_no" v-if="sequence">
+				<span>{{pageNo * pageSize + ($index + 1)}}</span>
+			</li>
+			<li class="col-{{key}}" v-if="!headers.widths" v-for="key of headers.columns">
+				<span title="{{{key | getGridValue item[key] clz 'title'}}}">{{{key | getGridValue item[key] clz}}}</span>
+			</li>
+			<li class="col-{{key}}" :style="{width: headers.widths[$index]+'%'}" v-if="headers.widths" v-for="key of headers.columns">
+				<span title="{{{key | getGridValue item[key] clz 'title'}}}">{{{key | getGridValue item[key] clz}}}</span>
+			</li>
+			<li class="rt col-actions" v-if="item.actions">
+				<a class="btn act-{{action[0]}}" v-for="action of item.actions" title="{{action[1]}}" @click="action[2](item)"></a>
+			</li>
+			<li class="rt col-actions" v-if="!item.actions">
+				<a class="btn act-{{action[0]}}" v-for="action of actions" title="{{action[1]}}" @click="action[2](item)"></a>
 			</li>
 		</ul>
 	</div>
@@ -38,17 +54,18 @@
 	 * 		clz,				//表格class
 	 * 		hasCheckbox,		//是否显示checkbox
 	 * 		sequence,			//显示序号名
-	 * 		headers: [],		//对应columns的显示
-	 * 		columns: [],		//表格显示列
+	 * 		headers: [			//显示表格头和列数及是否拥有width
+	 * 			titles: [],		//对应columns的显示文字
+	 *   		columns: [],	//表格显示列
+	 * 			[widths]: []	//列宽度集合
+	 * 		],		
 	 * 		items: [			//表格显示数据
 	 * 			{id, name....}
 	 * 		],
 	 * 		selectArr,			//
-	 * 		actions: {			//对于每一列表格元素的所有操作集合
-	 * 			add: (item) => {
-	 * 				...
-	 * 			}
-	 * 		}
+	 * 		actions: [			//对于每一列表格元素的所有操作集合
+	 * 			[key, name, (item) => {...}]
+	 * 		]			
 	 * }
 	 */
 	export default {
@@ -58,10 +75,9 @@
 			pageNo: Number,
 			pageSize: Number,
 			sequence: String,
-			headers: Array,
-			columns: Array,
+			headers: Object,
 			items: Array,
-			actions: Object,
+			actions: Array,
 			selectArr: Array
 		},
 		data () {
@@ -110,6 +126,7 @@
 		ul.hdr{
 			background: #e8e8e8;
 			height: 31px;
+			border: 1px solid transparent;
 			a{
 				color: #333333;
 				font-weight: bold;
@@ -137,6 +154,9 @@
 		.col-_check{
 			padding-top: 2px;
 			min-width: 20px;
+		}
+		.col-height (@height) {
+			height: @height;
 		}
 		.t-body{
 			background: #fff;

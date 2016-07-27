@@ -1,12 +1,11 @@
 <template>
 <div id="body" transition="fade">
-	<div id="sysline-grid">
+	<div class="sysrole-grid">
 		<grid 
 			:clz="grid.clz" 
 			:title="grid.title"
 			:has-checkbox="hasCheckbox"
 			:headers="grid.headers" 
-			:columns="grid.columns" 
 			:tools="tools"
 			:actions="actions"
 			:get-data="grid.getData"
@@ -17,7 +16,7 @@
 		:clz="dialog.clz"
 		:title="dialog.title"
 		:unit.sync="dialog.unit" 
-		@check-site="setPromptable"
+		@check-checkbox="setPromptable"
 		@ok-fn="okFn">
 		<div slot="content">{{dialog.content}}</div>
 	</dialog>
@@ -26,7 +25,6 @@
 <script>
 	import grid from '../../components/grid/grid.vue';
 	import dialog from '../../components/dialog.vue';
-	import Const from '../../libs/const.js';
 	import Utils from '../../libs/utils.js';
 
 	const Caller = TCM.Global.sysCaller;
@@ -37,8 +35,10 @@
 				grid: {
 					clz: 'sys-role',
 					title: '角色管理',
-					headers: ['角色名称','角色所属单位类型', '特殊情况下是否允许启动临时授权'],
-					columns: ['name', 'siteType', 'promptable'],
+					headers: {
+						titles: ['角色名称','角色所属单位类型', '特殊情况下是否允许启动临时授权'],
+						columns: ['name', 'siteType', 'promptable']
+					},
 					getData (params, cbFn) {
 						Caller('getRoles', _.merge({}, params), cbFn);
 					}
@@ -71,12 +71,13 @@
 			},
 			actions () { 
 				const _self = this;
-				if (window.OCC) 
-					return _.reduce(['edit', 'deleted'], (obj, item) => {
-						obj[item] = _self[item];
-						return obj;
-					}, {});
-				return {};
+				if (window.OCC) {
+					return [
+						['edit', '编辑', _self.edit],
+						['deleted', '删除', _self.deleted]
+					];
+				}
+				return [];
 			}
 		},
 		methods: {
@@ -96,11 +97,12 @@
 			getDropDown (clz, unit) {
 				unit.checkboxList = [{key: unit.id, text: '特殊情况下允许启动临时授权', selected: unit.promptable}];
 				unit.dropdownArr = ['siteType'];
+				const Const = window.getConst().Const;
 				unit.dropdownList = {
 					siteType: (() => {
 						const arr = [];
-						for (let key in Const.SiteTypeNameHT) {
-							arr.push({name: Const.SiteTypeNameHT[key], value: key});
+						for (let key in Const.SiteTypeNamesHT) {
+							arr.push({name: Const.SiteTypeNamesHT[key], value: key});
 						}
 						return arr;
 					})()

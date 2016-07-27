@@ -8,7 +8,6 @@ import filters from './filters';
 import {globalBus, eventBus} from './libs/eventemitter.js';
 import navHeader from './components/header.vue';
 import EventListener from './libs/EventListener.js';
-import Const from './libs/const.js';
 import global from './global.js';
 
 //定义全局事件对象
@@ -30,19 +29,14 @@ let router = new VueRouter({
     transitionOnLoad: true
 });
 
+var Const = {};
+
 //登录中间验证，页面需要登录而没有登录的情况直接跳转登录
 router.beforeEach((transition) => {
-    //window中存项目站点权限和用户权限
-    if (!window.OCC && localStorage.length > 0 && localStorage.siteType == Const.SiteTypes.OCC)
-        window.OCC = true;    
-    if (!window.PTSD && localStorage.length > 0 && localStorage.siteType == Const.SiteTypes.PTSD)
-        window.PTSD = true;
-    if (!window.Super && localStorage.length > 0 && localStorage.userType == Const.UserTypes.Super)
-        window.Super = true;
-    if (transition.to.name === "entry" && localStorage.userId) 
+    if (transition.to.name === "entry" && Const.userId) 
         transition.redirect('/');
     if (transition.to.auth) {
-        if (localStorage.userId) {
+        if (Const.userId) {
             transition.next();
         } else {
             transition.redirect('/entry');
@@ -55,10 +49,9 @@ router.beforeEach((transition) => {
 router.afterEach((transition) => {
     //路由跳转时，清空单页面注册事件
     eventBus.removeAllListeners();
-    //进入entry界面之前，取消动画效果
-    if (transition.to.name === 'entry')
-        $('#body').removeClass('fade-transition');
-	$('body').removeClass().addClass(transition.to.name);
+    //跳转界面之前，取消过渡效果
+    $('#body').removeClass('fade-transition');
+    $('body').removeClass().addClass(transition.to.name);
 });
 
 //全局绑定a标签Enter键触发其click事件
@@ -68,24 +61,44 @@ let documentClick = EventListener.listen(document, 'keyup', (e)=> {
         $('a.Enter').click();
 });
 
-let App = Vue.extend({
-    store,
-	components: {
-		navHeader
-	}
-});
-routerConfig(router);
-
-router.start(App, "#app");
-
-window.router = router;
-
-window.refreshView = () => {
-    for (let key in localStorage) {
-        localStorage.removeItem(key);
+window.setConst = (params) => {
+    for (let key in params) {
+        Const[key] = params[key];
     }
+    //window中存项目站点权限和用户权限
+    if (Const.siteType == Const.Const.SiteTypes.OCC)
+        window.OCC = true;    
+    if (Const.siteType == Const.Const.SiteTypes.PTSD)
+        window.PTSD = true;
+    if (Const.userType == Const.Const.UserTypes.Super)
+        window.Super = true;
+};
+
+window.getConst = () => {
+    return Const;
+};
+
+window.logoutView = () => {
+    Const = {};
     window.OCC = null;    
     window.PTSD = null;
     window.Super = null;
     router.go({ name: 'entry'});
 }
+let App = Vue.extend({
+    store,
+    components: {
+        navHeader
+    },
+    init () {
+        return TCM.Global.common('refresh', {}, (result) => {
+            window.setConst(result);
+        });
+    }
+});
+
+routerConfig(router);
+
+router.start(App, "#app");
+
+window.router = router;

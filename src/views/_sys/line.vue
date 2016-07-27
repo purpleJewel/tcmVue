@@ -17,13 +17,12 @@
 			</div>
 		</div>
 	</div>
-	<div id="sysline-grid">
+	<div class="sysline-grid">
 		<grid 
 			:clz="grid.clz" 
 			:title="grid.title"
 			:has-checkbox="hasCheckbox"
 			:headers="headers" 
-			:columns="columns" 
 			:tools="tools"
 			:actions="actions"
 			:get-data="grid.getData"
@@ -43,16 +42,16 @@
 <script>
 	import grid from '../../components/grid/grid.vue';
 	import dialog from '../../components/dialog.vue';
-	import Const from '../../libs/const.js';
 	import Utils from '../../libs/utils.js';
 
 	const Caller = TCM.Global.sysCaller;
+	const Const = window.getConst();
 
 	export default {
 		data () {
 			return {
-				lineName: localStorage.lineName,
-				siteName: localStorage.siteName,
+				lineName: Const.lineName,
+				siteName: Const.siteName,
 				affiliateSites: [],
 				grid: {
 					clz: 'sys-line',
@@ -79,13 +78,14 @@
 			},
 			headers () { 
 				if (window.PTSD) 
-					return ['编号', '标识号','名字', '类型', 'IP地址', '管辖状态', '说明'];
-				return ['编号', '标识号','名字', '类型', 'IP地址', '说明'];
-			},
-			columns () { 
-				if (window.PTSD) 
-					return ['no', 'id','name', 'type', 'ip', 'selected', 'desc'];
-				return ['no', 'id','name', 'type', 'ip', 'desc'];
+					return {
+						titles: ['编号', '标识号','名字', '类型', 'IP地址', '管辖状态', '说明'],
+						columns: ['no', 'id','name', 'type', 'ip', 'selected', 'desc']
+					};
+				return {
+					titles: ['编号', '标识号','名字', '类型', 'IP地址', '说明'],
+					columns: ['no', 'id','name', 'type', 'ip', 'desc']
+				};
 			},
 			tools () { 
 				const _self = this;
@@ -103,12 +103,13 @@
 			},
 			actions () { 
 				const _self = this;
-				if (window.Super || window.OCC) 
-					return _.reduce(['edit', 'deleted'], (obj, item) => {
-						obj[item] = _self[item];
-						return obj;
-					}, {});
-				return {};
+				if (window.Super || window.OCC) {
+					return [
+						['edit', '编辑', _self.edit],
+						['deleted', '删除', _self.deleted]
+					];
+				}
+				return [];
 			}
 		},
 		methods: {
@@ -157,8 +158,8 @@
 					unit.dropdownList = {
 						type: (() => {
 							const arr = [];
-							for (let key in Const.SiteTypeNameHT) {
-								arr.push({name: Const.SiteTypeNameHT[key], value: key});
+							for (let key in Const.Const.SiteTypeNamesHT) {
+								arr.push({name: Const.Const.SiteTypeNamesHT[key], value: key});
 							}
 							return arr;
 						})()

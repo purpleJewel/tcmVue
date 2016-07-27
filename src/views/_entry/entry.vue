@@ -47,26 +47,21 @@
 			},
 			login () {
 				let _self = this;
-				let account = _self.account.trim();
-				let password = _self.password.trim();
+				let account = this.account.trim();
+				let password = this.password.trim();
 				if (!(account && password)) {
-					_self.alert.show = true;
-					_self.alert.txt = '账号/密码不能为空';
+					this.alert.show = true;
+					this.alert.txt = '账号/密码不能为空';
 					return;
 				}
 				TCM.Global.common('login', {userName: account, password: password}, (result) => {
+					window.setConst(result);
 					_self.$route.router.go({name: "line"});
-					if (localStorage.length === 0) {
-						for (let key in result) {
-							localStorage.setItem(key, result[key]);
-						}
-					}
 					globalBus.emit('getSession', result);
 				});
 			},
 			show (data) {
-				let _self = this;
-				_self.alert.show = data;
+				this.alert.show = data;
 			}
 		},
 		components: {
