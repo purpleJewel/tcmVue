@@ -23,7 +23,7 @@
 			</a>
 		</li>
 	</ul>
-	<div class="t-body">
+	<div class="g-body">
 		<ul class="row" v-for="item of items" track-by="id">
 			<li class="col-_check" v-if="hasCheckbox">
 				<checkbox @selected="checkFn" :selected="selected(item.id)" :key="item.id"></checkbox>
@@ -158,7 +158,7 @@
 		.col-height (@height) {
 			height: @height;
 		}
-		.t-body{
+		.g-body{
 			background: #fff;
 			.row:nth-child(even) {
 				background: #f2f2f2;
@@ -166,9 +166,9 @@
 			.row{
 				border: 1px solid transparent;
 				&:hover{
-					background: rgba(97, 212, 255, 0.5);
+					background: rgba(0, 234, 255, 0.4);
+					border: 1px solid #00eaff;
 					color: #fff;
-					border: 1px solid #00BDFE;
 					.col-actions{
 						display: block;
 					}

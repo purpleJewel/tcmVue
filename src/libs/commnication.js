@@ -31,11 +31,11 @@ IXW.ajax = (name, params, cbFn, failFn) => {
 	});
 };
 
-function _subscribe(client, arr) {
-	client.subscribe('/topic/greetings', function(greeting){
-    	
-    });
-}
+// function _subscribe(client, arr) {
+// 	client.subscribe('/topic/greetings', function(greeting){
+//     	GlobalEventProxy.publish('/topic/greetings', greeting);
+//     });
+// }
 
 IXW.websocket = (arr) => {
 	let ws = new SockJS(TCM_BaseUrl);

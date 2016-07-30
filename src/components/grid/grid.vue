@@ -87,7 +87,8 @@
 	 * 		],			
 	 * 		getData (params, cbFn) {
 				Caller('name', _.merge({s: 1}, params), cbFn);
-			}
+			},
+			autoHandle			//是否手动加载数据，默认false
 	 * }
 	 */
 	 /**@*/
@@ -108,6 +109,10 @@
 				default: false
 			},
 			hasCheckbox: {
+				type: Boolean,
+				default: false
+			},
+			autoHandle: {
 				type: Boolean,
 				default: false
 			},
@@ -230,13 +235,15 @@
 				delete this.params.pageNo;
 				delete this.params.pageSize;
 			}
-			this.cbFn();
+			if (this.autoHandle) 
+				this.$dispatch('handle', this.cbFn);
+			else
+				this.cbFn();
 		}
 	}
 </script>
 <style lang="less">
 	.v-grid{
-		margin-bottom: 30px;
 		.v-tools{
 			padding: 20px 10px 10px 20px;
 			height: 70px;
@@ -313,7 +320,7 @@
 		.v-body{
 			padding: 0 15px;
 			background: #fff;
-			min-height: 800px;
+			min-height: 750px;
 		}
 		.v-foot{
 			height: 45px;

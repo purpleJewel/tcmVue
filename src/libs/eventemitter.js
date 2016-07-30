@@ -49,3 +49,11 @@ module.exports = {
 	globalBus: globalBus,
 	eventBus: eventBus
 };
+
+// class EventProxy {
+// 	publish (event, greeting) {
+// 		eventBus.emit(event, greeting);
+// 	}
+// }
+
+// window.GlobalEventProxy = new EventProxy();

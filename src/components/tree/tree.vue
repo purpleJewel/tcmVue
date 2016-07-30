@@ -4,6 +4,7 @@
 		<tree-view
 			class="root"
 	    	:model="getData"
+	    	@active-item="activeItem"
 	    	@add-child="addChild"
 		></tree-view>
 	</ul>
@@ -57,21 +58,28 @@
 		},
 		data () {
 			return {
-				root: {}
+				root: new TreeNode()
 			};
 		},
 		computed: {
 			getData () {
-				return this.root.getChildren()[0];
+				return this.root;
 			}
 		},
 		methods: {
+			buildTreeAsync (parent, data) {
+				const _self = this;
+				setTimeout(() => {
+					_self.buildTree(parent, data);
+				}, 0);
+			},
 			buildNode (data) {
 				let node = new TreeNode();
 				for (let key in data) {
 					if (key != 'children')
 						node[key] = data[key];
 				}
+				node.active = false;
 				return node;
 			},
 			buildTree (parent, data) {
@@ -80,15 +88,19 @@
 				parent.setChild(node);
 				if (data.children) {
 					for(let child of data.children) {
-						this.buildTree(node, child);
+						this.buildTreeAsync(node, child);
 					}
 				}
 			},
 			createRoot () {
-				let root = new TreeNode(this.status);
-				root.tier = -2;
-				this.buildTree(root, this.treeData);
-				this.root = root;
+				this.buildTreeAsync(this.root, this.treeData);
+			},
+			activeItem (model) {
+				if (this.root.active) {
+					if (this.root.active != model)
+						this.root.active.active = false;
+				}
+				this.root.active = model;
 			},
 			addChild (model) {
 				let node = new TreeNode();
@@ -103,11 +115,11 @@
 		},
 		watch: {
 			treeData () {
+				this.root.children = [];
+				this.root.active = null;
+				this.root.tier = -2;
 				this.createRoot();
 			}
-		},
-		created () {
-			this.createRoot();
 		}
 	}
 
@@ -115,10 +127,7 @@
 <style lang="less">
 	.tree{
 		.t-body{
-			ul{
-				// margin-left: 1em;
-				line-height: 1.8em;
-			}
+			
 		}
 	}
 </style>

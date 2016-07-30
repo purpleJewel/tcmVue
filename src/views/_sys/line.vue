@@ -267,6 +267,8 @@
 		components: {
 			grid,
 			dialog
+		},
+		ready () {
 		}
 	}
 </script>

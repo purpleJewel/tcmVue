@@ -6,6 +6,24 @@ import sim from '../sim/sim.js';
 window.TCM = {};
 TCM.Global = {};
 
+// let requestHT = {
+// 	'login': {
+// 		request: 'login',
+// 		response: 'response/login'
+// 	}
+	
+// }
+
+// function respenseFn(name, params, cbFn, failFn){
+// 	let socket = requestHT[name];
+
+// 	eventBus.once(socket.response, (result) => {
+// 		cbFn(result);
+// 		failFn(result)
+// 	});
+// 	client.send(socket.request, params);
+// }
+
 
 // import commnication from './libs/commnication.js';
 
@@ -37,6 +55,7 @@ TCM.Global.common = (name, params, cbFn, failFn) => {
 			break;
 	}
 };
+
 
 TCM.Global.sysCaller = (name, params, cbFn, failFn) => {
 	switch (name) {
@@ -232,12 +251,55 @@ TCM.Global.sysCaller = (name, params, cbFn, failFn) => {
 TCM.Global.deviceCaller = (name, params, cbFn, failFn) => {
 	switch (name) {
 		case 'getDeviceTree':
-		/**
-		 * 进入设备管理页面
-		 * @params  {} ( [description]
-		 * @return {}   [description]
-		 */
-		setTimeout(() => {cbFn(Test.getDeviceTree(params));}, 200);
-		break;
+			/**
+			 * 进入设备管理页面，获取tree数据
+			 * @params  {} ( [description]
+			 * @return {  
+		 	 *      id: i,
+					name: siteNames[i],
+					children: [
+						{
+							id: 50, 
+							name: '服务器', 
+							num: 22,
+							children: [
+								{id: 51, name: '网管服务器', num: 0},
+								{id: 52, name: '视频服务器', num: 11},
+								{id: 53, name: '视频分析服务器', num: 8},
+								{id: 54, name: '存储服务器', num: 3}
+							]
+						},
+						{id: 55, name: '存储设备', num: 3},
+						{
+							id: 56, 
+							name: '数字摄像机', 
+							num: 51,
+							children: [
+								{id: 57, name: '固定枪机', num: 15},
+								{id: 58, name: '半球机', num: 20},
+								{id: 59, name: '球机', num: 16}
+							]
+						}
+					]
+			 * }   
+			 * [单站点数据，此数据为多站点数据的children里面一项]
+			 */
+			setTimeout(() => {cbFn(Test.getDeviceTree(params));}, 200);
+			break;
+		case 'getDevieList':
+			/**
+			 * 获取设备列表
+			 * @params  {siteId, majorTypeId, deviceTypeId} ( [description]
+			 * @return {
+			 *    headers: [
+			 *    	titles: [],
+			 *    	columns: []
+			 *    ],
+			 *    total,
+			 *    data: [id, name, type, desc...]
+			 * }   [description]
+			 */
+			setTimeout(() => {cbFn(Test.getDevieList(params));}, 200);
+			break;
 	}
 }

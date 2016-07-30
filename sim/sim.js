@@ -389,37 +389,127 @@ Test.timingSetting = (params) => {
 
 
 /********************设备列表*************************/
-Test.getDeviceTree = () => {
+function getDeviceTree(i) {
 	return {
-		id: -1,
-		name: 'My Tree',
+		id: i,
+		name: siteNames[i],
 		children: [
-			{id: 1, name: 'hello' },
-			{id: 2, name: 'wat' },
 			{
-				id: 3, 
-				name: 'child1 folder',
+				id: 50, 
+				name: '服务器', 
+				num: 22,
 				children: [
-					{ 
-						id: 4, 
-						name: 'child2 folder',
-						children: [
-							{id: 5, name: 'hello' },
-							{id: 6, name: 'wat' }
-						]
-					},
-					{id: 7, name: 'hello' },
-					{id: 8, name: 'wat' },
-					{ 
-						id: 9, 
-						name: 'child3 folder',
-						children: [
-							{id: 10, name: 'hello' },
-							{id: 11, name: 'wat' }
-						]
-					}
+					{id: 51, name: '网管服务器', num: 0},
+					{id: 52, name: '视频服务器', num: 11},
+					{id: 53, name: '视频分析服务器', num: 8},
+					{id: 54, name: '存储服务器', num: 3}
+				]
+			},
+			{id: 55, name: '存储设备', num: 3},
+			{
+				id: 56, 
+				name: '数字摄像机', 
+				num: 51,
+				children: [
+					{id: 57, name: '固定枪机', num: 15},
+					{id: 58, name: '半球机', num: 20},
+					{id: 59, name: '球机', num: 16}
+				]
+			},
+			{
+				id: 60, 
+				name: '模拟摄像机', 
+				num: 210,
+				children: [
+					{id: 61, name: '固定枪机', num: 55},
+					{id: 62, name: '半球机', num: 65},
+					{id: 63, name: '球机', num: 90}
+				]
+			},
+			{
+				id: 64, 
+				name: '拾音器', 
+				num: 35,
+				children: [
+					{id: 65, name: '定向拾音器', num: 21},
+					{id: 66, name: '全向拾音器', num: 14}
+				]
+			},
+			{id: 67, name: '编码器', num: 24},
+			{id: 68, name: '解码器', num: 44},
+			{id: 69, name: '画面分割器', num: 26},
+			{id: 70, name: '监视器', num: 14},
+			{id: 71, name: '控制终端', num: 74},
+			{id: 72, name: '字符叠加器', num: 4},
+			{
+				id: 73, 
+				name: '网络和附属设备',
+				num: 68, 
+				children: [
+					{id: 74, name: '交换机', num: 18},
+					{id: 75, name: '光端机', num: 4},
+					{id: 76, name: '光纤收发器', num: 12},
+					{id: 77, name: '数字KVM', num: 18},
+					{id: 78, name: '数字PDU', num: 4},
+					{id: 79, name: '其他设备', num: 12}
 				]
 			}
 		]
 	};
+}
+
+const DeviceTypeNames = {
+	0: "网管服务器", 1: "视频服务器", 2: "视频分析服务器", 3: "存储服务器",
+	10: "存储设备",
+	20: "数字固定枪机",  21: "数字半球机",  22: "数字球机",
+	31: "模拟固定枪机",  32: "模拟半球机",  33: "模拟球机",
+	40: "定向拾音器",41: "全向拾音器",
+	50: "编码器",  51: "解码器",  52: "画面分割器",53: "监视器",  54: "控制终端", 55: "解码器",
+	60: "交换机",  61: "光端机",  62: "光纤收发器",63: "数字KVM",64: "数字PDU", 65: "字符叠加器",
+	90: "其他设备"
 };
+
+const numArr = [0, 1, 2, 3, 10, 20, 21, 22, 31, 32, 33, 40, 41, 50, 51, 52, 53, 54, 60, 61, 62, 63, 64, 65, 90];
+
+let Devices = [];
+for (var i = 0; i < 200; i++) {
+	let randomNum = numArr[Math.floor(Math.random() * numArr.length)];
+	Devices.push({
+		id: i,
+		name: DeviceTypeNames[randomNum] + i,
+		type: DeviceTypeNames[randomNum],
+		desc: '描述：' + DeviceTypeNames[randomNum]
+	});
+}
+
+Test.getDeviceTree = (params) => {
+	if (siteType === 1){
+		let arr = [];
+		for (var i = 0; i < siteNames.length-1; i++) {
+			arr.push(getDeviceTree(i));
+		}
+		return {
+			id: -1,
+			children: arr
+		};
+	} else {
+		let treeData = getDeviceTree(1);
+		treeData.name = '西直门';
+		return {
+			id: -1,
+			children: [treeData]
+		};
+	}
+};
+
+Test.getDevieList = (params) => {
+	return {
+		headers: {
+			titles: ['设备类型','设备名称', '备注'],
+			columns: ['type', 'name', 'desc'],
+			widths: [30, 30, 40]
+		},
+		total: Devices.length,
+		data: getData2Grid(params, Devices).data
+	}
+}

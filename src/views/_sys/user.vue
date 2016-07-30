@@ -43,7 +43,7 @@
 				],
 				grid: {
 					clz: 'sys-user',
-					title: '角色管理',
+					title: '用户管理',
 					hasCheckbox: true,
 					paginative: true,
 					headers: {

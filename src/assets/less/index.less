@@ -28,9 +28,41 @@
     padding-left: 15px;
 }
 
+
+/* 过渡和动画 */
 .fade-transition{
     transition: opacity 0.5s;
 }
 .fade-enter, .fade-leave{ 
     opacity: 0;
 }
+
+.keyframes(@name; @arguments) {
+    @-moz-keyframes @name { @arguments(); }
+    @-webkit-keyframes @name { @arguments(); }
+    @keyframes @name { @arguments(); }
+}
+
+.animation(@arguments) {
+    -webkit-animation: @arguments;
+    -moz-animation: @arguments;
+    animation: @arguments;
+}
+
+/* .ico-right{
+   .keyframes(tree-rotate; {
+       0% { transform: rotate(90deg); }
+       100% { transform: rotate(-90deg); }
+   });
+
+   .animation(tree-rotate 0.2s linear alternate) 
+}
+
+.ico-down {
+    .keyframes(tree-rotate; {
+        0% { transform: rotate(-90deg); }
+        100% { transform: rotate(0deg); }
+    });
+
+    .animation(tree-rotate 0.2s linear alternate)
+} */

@@ -1,20 +1,23 @@
 <template>
 <li>
-    <div class="t-node" :class="[paddingList[model.tier], levelList[model.tier]]" v-if="model.name" :class="{bold: isFolder}" @click="toggle">
-    	<span class="t-ico" v-if="isFolder">[{{open ? '-' : '+'}}]</span>
+    <div class="t-node" :class="[levelList[model.tier], model.active ? 'active': '']" v-if="model.name" @click="toggle(model)">
+    	<span class="t-ico" :class="{'ico-right': isFolder && !open, 'ico-down': isFolder && open}"></span>
     	<checkbox
     		v-if="checkbox"	
     	></checkbox>
-    	<span class="t-name">{{model.name}}</span>
-    	<span class="t-num" v-if="model.num">{{model.num}}</span>
+    	<div class="t-text" title="点击获取数据列表">
+	    	<span class="t-name">{{model.name}}</span>
+	    	<span class="t-num" v-if="model.num || model.num === 0">({{model.num}})</span>
+    	</div>
     </div>
-    <ul v-show="open" v-if="isFolder" transition="collapse">
+    <ul v-show="open || model.tier == -2 || model.tier == -1" v-if="isFolder" transition="collapse">
 		<item
 			:class="{'node' : model.children.length, 'leaf': !model.children.length}"
 			v-for="model in model.children"
+			track-by='$index'
 			:model="model">
 		</item>
-		<li class="add-node" @click="addChild" v-if="model.name" :class="[paddingList[model.tier], levelList[model.tier]]">+</li>
+		<!-- <li class="add-node" @click="addChild" v-if="model.tier == -1" :class="[levelList[model.tier]]">+</li> -->
     </ul>
 </li>
 </template>
@@ -29,7 +32,7 @@
 		},
 		data () {
 			return {
-				paddingList: ['p1', 'p2', 'p3'],
+				active: 'active',
 				levelList: ['l1', 'l2', 'l3'],
 				checkbox: false,
 				open: false
@@ -41,9 +44,15 @@
 			}
 		},
 		methods: {
-			toggle () {
-				if (this.isFolder) {
-					this.open = !this.open
+			toggle (model) {
+				let elClass = event.target.getAttribute('class');
+				if (/t-text|t-name|t-num/.test(elClass)) {
+					model.active = true;
+					this.$dispatch('active-item', model);
+				} else{
+					if (this.isFolder) {
+						this.open = !this.open
+					}
 				}
 			},
 			addChild () {
@@ -57,10 +66,13 @@
 			collapse: {
 				beforeEnter: (el) => {
 					if (el.style.maxHeight) return;
-					el.style.display = "block";
-					let height = el.offsetHeight;
-					el.style.display = 'none';
-					el.style.maxHeight = height + 'px';
+					if (el.style.display === 'none') {
+						el.style.display = "block";
+						let height = el.offsetHeight;
+						el.style.display = "none";
+						if (height)
+							el.style.maxHeight = height + 'px';
+					}
 				},
 				afterEnter: (el) => {
 					el.style.maxHeight = '';
@@ -85,37 +97,57 @@
 	  cursor: pointer;
 	}
 	.add-node, .t-node{
-		line-height: 1.8em;
+		line-height: 2.5em;
+	}
+	.active{
+		.t-name, .t-num{
+			color: #00d8ff;
+			font-weight: bold;
+		}
 	}
 	.t-node{
 		border: 1px solid transparent;
+		border-top-color: #253545;
+		border-bottom-color: #2c4259;
 		&:hover{
-			background: rgba(97, 212, 255, 0.5);
-			border: 1px solid #00BDFE;
-		}
-		.bold {
-		  font-weight: bold;
+			background: rgba(0, 234, 255, 0.4);
+			border: 1px solid #00eaff;
 		}
 		.checkbox-a .checkbox{
 			margin: 4px;
 		}
-	}
-	.p1{
-		padding-left: 15px;
-	}
-	.p2{
-		padding-left: 30px;
-	}
-	.p3{
-		padding-left: 45px;
+		.t-text{
+			display: inline-block;
+			&:hover{
+				color: #00d8ff;
+			}
+		}
 	}
 	.l1{
-		background: #1e2e3d;
+		padding-left: 25px;
+		background: #1e2e3c;
 	}
 	.l2{
-		background: #aaf;
+		padding-left: 45px;
+		background: #253545;
 	}
 	.l3{
-		padding-left: 45px;
+		padding-left: 65px;
+		background: #334559;
+		border-color: transparent;
+	}
+	.t-ico{
+		display: inline-block;
+		width: 12px;
+		height: 12px;
+		transition: all 0.2s ease;
+		margin-right: 3px;
+	}
+	.ico-right{
+		background: url(../../assets/images/ixpic/arrow-tree-right.png);
+	}
+	.ico-down{
+		transform: rotate(90deg);
+		background: url(../../assets/images/ixpic/arrow-tree-down.png);
 	}
 </style>
