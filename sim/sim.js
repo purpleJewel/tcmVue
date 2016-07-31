@@ -57,6 +57,7 @@ Test.refresh = () => {
 
 Test.logout = () => {
 	session = {};
+	session.Const = Const;
 };
 
 var SiteTypes = Const.SiteTypes;
@@ -391,7 +392,7 @@ Test.timingSetting = (params) => {
 /********************设备列表*************************/
 function getDeviceTree(i) {
 	return {
-		id: i,
+		id: i+1,
 		name: siteNames[i],
 		children: [
 			{
@@ -493,7 +494,7 @@ Test.getDeviceTree = (params) => {
 			children: arr
 		};
 	} else {
-		let treeData = getDeviceTree(1);
+		let treeData = getDeviceTree(0);
 		treeData.name = '西直门';
 		return {
 			id: -1,

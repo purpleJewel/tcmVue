@@ -5,6 +5,7 @@
 			<div class="title">线路设备列表</div>
 			<tree-view
 				:tree-data="treeData"
+				@active-node="getGridParams"
 			></tree-view>
 		</div>
 		<div class="list-grid">
@@ -35,6 +36,12 @@
 			const _self = this;
 			return {
 				treeData: {},
+				item: null,
+				gridParams: {
+					siteId: null,
+					majorTypeId: null,
+					deviceTypeId: null
+				},
 				gridData: {
 					headers: {
 						titles: [],
@@ -47,7 +54,7 @@
 					title: '设备列表',
 					paginative: true,
 					getData (params, cbFn) {
-						Caller('getDevieList', _.merge({}, params), (result) => {
+						Caller('getDevieList', _.merge({}, _self.gridParams, params), (result) => {
 							result.headers.widths = _.map(result.headers.widths, (width) => {
 								return Math.floor(width * 0.80);
 							});
@@ -59,19 +66,20 @@
 			};
 		},
 		computed: {
-			gridParams () {
-
-			},
 			headers () {
 				return this.gridData.headers;
 			},
 			//获取grid配置数据，并判断权限
 			hasCheckbox () { 
-				return true;
+				if (this.gridParams.siteId == window.getConst().siteId)
+					return true;
+				return false;
 			},
 			tools () { 
 				const _self = this;
 				let toolList = ['refresh', 'create', 'deleted'];
+				if (this.gridParams.siteId != window.getConst().siteId)
+					toolList = ['refresh'];
 				return _.reduce(toolList, (obj, item) => {
 					obj[item] = _self[item];
 					return obj;
@@ -79,29 +87,63 @@
 			},
 			actions () { 
 				const _self = this;
-				return [
-					['edit', '编辑', _self.edit],
-					['deleted', '删除', _self.deleted]
-				];
+				if (this.gridParams.siteId == window.getConst().siteId)
+					return [
+						['edit', '编辑', _self.edit],
+						['deleted', '删除', _self.deleted]
+					];
+				return [];
 			}
 		},
 		methods: {
+			findId (node, n) {
+				if (node.tier != n) {
+					this.findId(node.getParent(), n);
+				} else {
+					this.item = {
+						id: node.id,
+						name: node.name
+					};
+					return;
+				}
+			},
 			getGridParams (model) {
-				this.treeData
+				let params = this.gridParams;
+				if (model.tier === 0){
+					params.siteId = model.id;
+					params.majorTypeId = null;
+					params.deviceTypeId = null;
+					this.grid.title = model.name + '设备列表';
+				} else if (model.tier === 1) {
+					this.findId(model, 0);
+					params.siteId = this.item.id;
+					params.majorTypeId = model.id;
+					params.deviceTypeId = null;
+					this.grid.title = this.item.name + '/' + model.name + '列表';
+				} else {
+					this.findId(model, 0);
+					params.siteId = this.item.id;
+					const name = this.item.name;
+					this.findId(model, 1);
+					params.majorTypeId = this.item.id;
+					params.deviceTypeId = model.id;
+					this.grid.title = name + '/' + this.item.name + '/' + model.name + '列表';
+				}
+				this.gridCbfn();
 			},
 			handleFn (cbFn) {
 				this.gridCbfn = cbFn;
 			},
-			refresh () {
+			refresh (cbFn) {
+				cbFn();
+			},
+			edit (cbFn, item) {
 
 			},
-			edit () {
+			create (cbFn) {
 
 			},
-			create () {
-
-			},
-			deleted () {
+			deleted (cbFn, ids) {
 
 			}
 		},
@@ -111,8 +153,10 @@
 		},
 		ready () {
 			const _self = this;
-			Caller('getDeviceTree', {}, (result) => {
+			Caller('getDeviceTree', {}, (result) => {			
 				_self.treeData = result;
+				_self.gridParams.siteId = result.children[0].id;
+				_self.grid.title = result.children[0].name + '设备列表';
 				_self.gridCbfn();
 			});
 		}
@@ -132,22 +176,6 @@
 		}
 		.list-grid{
 			margin-left: 260px;
-		}
-		.t-body{
-			background: #334558;
-			border-radius: 0 0 5px 5px;
-			min-height: 865px;
-			max-height: 866px;
-			overflow-y: auto;
-			&::-webkit-scrollbar {
-    			width: 12px;
-   				background-color: #ccc;
-   				border-radius: 5px;
-   			}
-   			&::-webkit-scrollbar-thumb{
-				background-color: #fff;
-   				border-radius: 5px;
-   			}
 		}
 	}
 </style>

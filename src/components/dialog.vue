@@ -1,5 +1,5 @@
 <template>
-<div class="dialog-mask" v-show="show" transition="fade">
+<div class="dialog-mask" v-show="show" transition="dialog-confirm">
 	<div class="nv-dialog-inner {{clz}}">
 		<div class="nv-title">{{title}}</div>
 		<div class="content">
@@ -212,11 +212,5 @@
 }
 .pro-id{
 	display: none;
-}
-.fade-enter ,.fade-leave {
-	.nv-dialog-inner{
-		-webkit-transform: scale(0.9);
-		transform: scale(0.9);	
-	}
 }
 </style>

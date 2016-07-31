@@ -2,7 +2,7 @@
 <div class="v-grid {{clz}}">
 	<div class="title">{{title}}</div>
 	<div class="v-tools">
-		<div class="btn-{{$key}} btn {{$key == 'deleted'? isabled : ''}}" data-key="$key" v-for="tool of tools" @click="toolFn($key, tool)"></div>
+		<div class="btn-{{$key}} btn {{$key == 'deleted'? isabled : ''}}" :data-key="$key" v-for="tool of tools" @click="toolFn($key, tool)"></div>
 		<slot name="tool-extend"></slot>
 		<div class="date-picker" v-if="datePicker">
 			<span>时间：</span>
@@ -179,7 +179,8 @@
 				let actionArr = _.cloneDeep(_self.actions);
 				_self.actions.forEach((action, idx) => {
 					actionArr[idx][2] = (item) => {
-						action[2](_self.cbFn, item);
+						//actionFn (cbFn, item) 回调函数
+						action[2](_self.cbFn, item); 
 					};
 				});
 				return actionArr;
@@ -199,6 +200,7 @@
 				const _self = this;
 				if (key == 'deleted' && _self.isabled == 'disabled')
 					return;
+				// tool (cbFn, selectArr) 回调函数
 				tool(_self.cbFn, _self.selectArr);
 			},
 			searchFn (event) {

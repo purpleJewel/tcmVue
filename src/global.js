@@ -299,7 +299,7 @@ TCM.Global.deviceCaller = (name, params, cbFn, failFn) => {
 			 *    data: [id, name, type, desc...]
 			 * }   [description]
 			 */
-			setTimeout(() => {cbFn(Test.getDevieList(params));}, 200);
+			setTimeout(() => {cbFn(Test.getDevieList(params));}, 50);
 			break;
 	}
 }

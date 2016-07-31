@@ -59,9 +59,9 @@
 		}
 	}
 }
-.fade-enter .nv-alert-inner,
-.fade-leave .nv-alert-inner{
-	-webkit-transform: scale(0.9);
-	transform: scale(0.9);	
+.fade-enter, .fade-leave{
+	.nv-alert-inner{
+		transform: scale(0.9);
+	}
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-<div class="confirm-mask" v-show="show" transition="fade">
+<div class="confirm-mask" v-show="show" transition="dialog-confirm">
 	<div class="nv-confirm-inner">
 		<div class="nv-title">提示</div>
 		<div class="content" v-text="content"></div>
@@ -76,12 +76,6 @@
 		    	}
 		    }
 		}
-	}
-}
-.fade-enter ,.fade-leave {
-	.nv-confirm-inner{
-		-webkit-transform: scale(0.9);
-		transform: scale(0.9);	
 	}
 }
 </style>
