@@ -7,7 +7,7 @@
 		</a>
 		<div v-if="item[2] !== undefined">
 			<ul class="sub" v-show="item[3]" transition="bounce">
-				<li id="nav-{{item[0]}}-{{sub[0]}}" :class="{'active' : routeSub == sub[0]}" v-for="sub of item[2]" transition="stagger">
+				<li id="nav-{{item[0]}}-{{sub[0]}}" :class="{'active' : routeSub == sub[0]}" v-for="sub of item[2]" :style="{transition: `all 0.4s ease-out ${$index * 0.08}s`}">
 					<a v-link="{name: sub[0]}" @click="clickLink(item[0], sub[0])" v-text="sub[1]"></a>
 				</li>
 			</ul>
@@ -101,22 +101,5 @@
 		}
 		&.sub{z-index: 4000 !important;}
 		animation: bounce-out 1s ease;
-	}
-	.stagger-transition{
-		&:nth-child(1){
-			transition: all 0.4s ease-out;
-		}
-		&:nth-child(2){
-			transition: all 0.4s ease-out .08s;
-		}
-		&:nth-child(3){
-			transition: all 0.4s ease-out .16s;
-		}
-		&:nth-child(4){
-			transition: all 0.4s ease-out .24s;
-		}
-		&:nth-child(5){
-			transition: all 0.4s ease-out .32s;
-		}
 	}
 </style>
