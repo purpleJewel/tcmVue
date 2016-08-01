@@ -68,7 +68,7 @@
 	 *   	  $key: [{name, value}]
 	 *      },
 	 *   	properties: [		//私有属性数组，便于后台数据库存储
-	 *   		{key, name, value, [type, list: [{name, value}]]}
+	 *   		{key, title, value, [type, list: [{name, value}]]}
 	 *   	]
 	 *   }
 	 *   inputTypes: [			//input的类型

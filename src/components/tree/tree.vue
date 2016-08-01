@@ -55,6 +55,7 @@
 		data () {
 			return {
 				init: true,
+				selectArr: [],
 				root: new TreeNode()
 			};
 		},
@@ -86,6 +87,7 @@
 					this.init = false;
 					node.active = true;
 					this.root.active = node;
+					this.$dispatch('active-node', node);
 				}
 				parent.setChild(node);
 				if (data.children) {

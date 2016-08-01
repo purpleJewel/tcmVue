@@ -202,7 +202,7 @@
 					content: '是否删除选中用户？'
 				});
 				this.okFn = () => {
-					Caller('deletedUsers', {ids: ids}, () => {
+					Caller('deleteUsers', {ids: ids}, () => {
 						this.dialog.show = false;
 						cbFn();
 					});

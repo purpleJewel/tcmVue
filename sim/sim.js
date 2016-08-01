@@ -141,7 +141,7 @@ Test.editSite = (params) => {
 	editOneInArr(params, Sites);
 };
 
-Test.deletedSites = (params) => {
+Test.deleteSites = (params) => {
 	var arr = _.difference(allSiteIds, params.ids);
 	if (arr.length === 0) 
 		return Sites = [];
@@ -220,7 +220,7 @@ Test.editRole = (params) => {
 	editOneInArr(params, UserRoles);
 };
 
-Test.deletedRoles = (params) => {
+Test.deleteRoles = (params) => {
 	var arr = _.difference(roleIds, params.ids);
 	if (arr.length === 0) 
 		return UserRoles = [];
@@ -290,7 +290,7 @@ Test.changePassword = (params) => {
 
 };
 
-Test.deletedUsers = (params) => {
+Test.deleteUsers = (params) => {
 	var arr = _.difference(userIds, params.ids);
 	if (arr.length === 0) {
 		Users.users = [];
@@ -371,7 +371,7 @@ Test.chgpriv = (params) => {
 
 var _config = {
 	ControlReleaseTime: "3000",// MS
-	TimingSetting: '{"schedule":"01:00:00","useRS422":false,"useNTP":true,"ntpIP":"1.1.1.1","ntpPort":"1","autoTiming":true}',
+	TimingSetting: '{"schedule":"01:00:00","ntpIP":"1.1.1.1","ntpPort":"1","autoTiming":true}',
 	ServerBackupSetting: '{"backupTVS" : true,"backupSS": true}', 
 	StorageBackupSetting : true, 
 	Sync : false,
@@ -382,10 +382,17 @@ Test.getConfig = () => {
 	return _config;
 };
 Test.setConfig = (params) => {
-	_config = params;
+	for (let key in params) {
+		_config[key] = params[key];
+	}
 };
-Test.timingSetting = (params) => {
-	_config.TimingSetting = params;
+
+Test.syncConfig = (params) => {
+
+};
+
+Test.timing = (params) => {
+
 };
 
 
@@ -400,21 +407,21 @@ function getDeviceTree(i) {
 				name: '服务器', 
 				num: 22,
 				children: [
-					{id: 51, name: '网管服务器', num: 0},
-					{id: 52, name: '视频服务器', num: 11},
-					{id: 53, name: '视频分析服务器', num: 8},
-					{id: 54, name: '存储服务器', num: 3}
+					{id: 0, name: '网管服务器', num: 0},
+					{id: 1, name: '视频服务器', num: 11},
+					{id: 2, name: '视频分析服务器', num: 8},
+					{id: 3, name: '存储服务器', num: 3}
 				]
 			},
-			{id: 55, name: '存储设备', num: 3},
+			{id: 10, name: '存储设备', num: 3},
 			{
 				id: 56, 
 				name: '数字摄像机', 
 				num: 51,
 				children: [
-					{id: 57, name: '固定枪机', num: 15},
-					{id: 58, name: '半球机', num: 20},
-					{id: 59, name: '球机', num: 16}
+					{id: 20, name: '固定枪机', num: 15},
+					{id: 21, name: '半球机', num: 20},
+					{id: 22, name: '球机', num: 16}
 				]
 			},
 			{
@@ -422,9 +429,9 @@ function getDeviceTree(i) {
 				name: '模拟摄像机', 
 				num: 210,
 				children: [
-					{id: 61, name: '固定枪机', num: 55},
-					{id: 62, name: '半球机', num: 65},
-					{id: 63, name: '球机', num: 90}
+					{id: 31, name: '固定枪机', num: 55},
+					{id: 32, name: '半球机', num: 65},
+					{id: 33, name: '球机', num: 90}
 				]
 			},
 			{
@@ -432,27 +439,27 @@ function getDeviceTree(i) {
 				name: '拾音器', 
 				num: 35,
 				children: [
-					{id: 65, name: '定向拾音器', num: 21},
-					{id: 66, name: '全向拾音器', num: 14}
+					{id: 40, name: '定向拾音器', num: 21},
+					{id: 41, name: '全向拾音器', num: 14}
 				]
 			},
-			{id: 67, name: '编码器', num: 24},
-			{id: 68, name: '解码器', num: 44},
-			{id: 69, name: '画面分割器', num: 26},
-			{id: 70, name: '监视器', num: 14},
-			{id: 71, name: '控制终端', num: 74},
-			{id: 72, name: '字符叠加器', num: 4},
+			{id: 50, name: '编码器', num: 24},
+			{id: 51, name: '解码器', num: 44},
+			{id: 52, name: '画面分割器', num: 26},
+			{id: 53, name: '监视器', num: 14},
+			{id: 54, name: '控制终端', num: 74},
+			{id: 65, name: '字符叠加器', num: 4},
 			{
 				id: 73, 
 				name: '网络和附属设备',
 				num: 68, 
 				children: [
-					{id: 74, name: '交换机', num: 18},
-					{id: 75, name: '光端机', num: 4},
-					{id: 76, name: '光纤收发器', num: 12},
-					{id: 77, name: '数字KVM', num: 18},
-					{id: 78, name: '数字PDU', num: 4},
-					{id: 79, name: '其他设备', num: 12}
+					{id: 60, name: '交换机', num: 18},
+					{id: 61, name: '光端机', num: 4},
+					{id: 62, name: '光纤收发器', num: 12},
+					{id: 63, name: '数字KVM', num: 18},
+					{id: 64, name: '数字PDU', num: 4},
+					{id: 90, name: '其他设备', num: 12}
 				]
 			}
 		]
@@ -473,6 +480,7 @@ const DeviceTypeNames = {
 const numArr = [0, 1, 2, 3, 10, 20, 21, 22, 31, 32, 33, 40, 41, 50, 51, 52, 53, 54, 60, 61, 62, 63, 64, 65, 90];
 
 let Devices = [];
+let DevicesIds = [];
 for (var i = 0; i < 200; i++) {
 	let randomNum = numArr[Math.floor(Math.random() * numArr.length)];
 	Devices.push({
@@ -481,6 +489,7 @@ for (var i = 0; i < 200; i++) {
 		type: DeviceTypeNames[randomNum],
 		desc: '描述：' + DeviceTypeNames[randomNum]
 	});
+	DevicesIds.push(i);
 }
 
 Test.getDeviceTree = (params) => {
@@ -513,4 +522,111 @@ Test.getDevieList = (params) => {
 		total: Devices.length,
 		data: getData2Grid(params, Devices).data
 	}
+};
+
+Test.getCreateDevice = (params) => {
+	return {
+		name: '',
+		type: params.id,
+		typeName: DeviceTypeNames[params.id],
+		properties: [
+			{key: 'ip', title: 'IP地址', value: ''},
+			{key: 'version', title: '软件版本号', value: ''},
+			{key: 'driver', title: '厂家及型号', value: 1, type: 'dropdown', list: [
+				{name: '大华', value: 1},
+				{name: '海康', value: 2},
+				{name: '安讯士', value: 3},
+				{name: '华为', value: 4},
+				{name: '网力', value: 5}
+			]},
+			{key: 'desc', title: '备注', value: ''}
+		]
+	}
+};
+
+Test.getEditDevice = (params) => {
+	return {
+		id: params.id,
+		name: 'xxx设备',
+		type: params.id,
+		typeName: '设备',
+		properties: [
+			{key: 'ip', title: 'IP地址', value: '192.168.21.1'},
+			{key: 'version', title: '软件版本号', value: '1.0.1'},
+			{key: 'desc', title: '备注', value: 'XXX设备描述信息'}
+		]
+	}
+};
+
+Test.createDevice = (params) => {
+	Devices.unshift({
+		id: Devices.length+1,
+		name: params.name,
+		type: DeviceTypeNames[params.type],
+		desc: '描述：' + DeviceTypeNames[params.type]
+	});
+};
+
+Test.editDevice = (params) => {
+	Devices.forEach((device) => {
+		if (device.id == params.id) 
+			device.name = params.name;
+	});
+};
+
+Test.deleteDevices = (params) => {
+	var arr = _.difference(DevicesIds, params.ids);
+	if (arr.length === 0) 
+		return Devices = [];
+	Devices = _.reduce(Devices, (acc, device) => {
+		if (_.indexOf(arr, device.id) > -1)
+			acc.push(device);
+		return acc;
+	}, []);
+};
+
+/********************摄像机分区*************************/
+const zone = {
+	id: 50, 
+	name: '站台层', 
+	num: 34,
+	children: [
+		{id: 20, name: '枪机', num: 15},
+		{id: 21, name: '球机', num: 11},
+		{id: 22, name: '半球机', num: 8}
+	]
+};
+function getZoneTree(k) {
+	let arr = [];
+	for (var i = 0; i < k; i++) {
+		let one = _.cloneDeep(zone);
+		one.id = one.id + i;
+		one.name = one.name + i;
+		arr.push(one);
+	}
+	return {
+		id: i+1,
+		name: siteNames[i],
+		children: arr
+	};
 }
+
+Test.getZoneTree = (params) => {
+	if (siteType === 1){
+		let arr = [];
+		for (var i = 0; i < siteNames.length-1; i++) {
+			arr.push(getZoneTree(i));
+		}
+		return {
+			id: -1,
+			children: arr
+		};
+	} else {
+		let treeData = getZoneTree(0);
+		treeData.name = '西直门';
+		return {
+			id: -1,
+			children: [treeData]
+		};
+	}
+};

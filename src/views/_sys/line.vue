@@ -227,7 +227,7 @@
 					content: '是否删除选中站点？'
 				});
 				this.okFn = () => {
-					Caller('deletedSites', {ids: ids}, () => {
+					Caller('deleteSites', {ids: ids}, () => {
 						this.dialog.show = false;
 						cbFn();
 					});

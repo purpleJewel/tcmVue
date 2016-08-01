@@ -23,8 +23,6 @@
 			cursor: pointer;
 			width: 16px;
 			height: 16px;
-			margin-top: 8px;
-			margin-left: 4px;
 			display: inline-block;
 			vertical-align: top;
 			background: url(../assets/images/ixpic/cb-uncheck.png) no-repeat;

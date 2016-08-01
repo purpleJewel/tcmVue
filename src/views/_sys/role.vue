@@ -170,7 +170,7 @@
 					content: '是否删除选中角色？'
 				});
 				this.okFn = () => {
-					Caller('deletedRoles', {ids: ids}, () => {
+					Caller('deleteRoles', {ids: ids}, () => {
 						this.dialog.show = false;
 						cbFn();
 					});
@@ -195,7 +195,7 @@
 	.create-role{
 		.content{
 			.label{width: 90px;}
-			.checkbox{margin-right: 10px;}
+			.checkbox{margin-right: 10px; margin-top: 8px;}
 		}
 	}
 </style>

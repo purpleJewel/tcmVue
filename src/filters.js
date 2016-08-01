@@ -145,6 +145,14 @@ exports.getDialogTitle = (key, value, clz) => {
                 return value;
         }
     }; 
+    const CreateDevice = (key, value) => {
+        switch (key) {
+            case 'name':
+                return '设备名称';
+            default:
+                return value;
+        }
+    };
     switch (clz) {
         case 'create-site':
             return CreateSite(key, value);
@@ -163,7 +171,10 @@ exports.getDialogTitle = (key, value, clz) => {
             break;
         case 'change-password':
             return ChangePassword(key,value);
-            break;   
+            break;  
+        case 'create-device': case 'edit-device':
+            return CreateDevice(key, value);
+            break; 
         default:
             return value;
             break;

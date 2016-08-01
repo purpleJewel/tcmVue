@@ -2,9 +2,6 @@
 <li>
     <div class="t-node" :class="[levelList[model.tier], model.active ? 'active': '']" v-if="model.name" @click="toggle(model)">
     	<span class="t-ico" :class="{'ico-right': isFolder && !open, 'ico-down': isFolder && open}"></span>
-    	<checkbox
-    		v-if="checkbox"	
-    	></checkbox>
     	<div class="t-text" title="点击获取数据列表">
 	    	<span class="t-name">{{model.name}}</span>
 	    	<span class="t-num" v-if="model.num || model.num === 0">({{model.num}})</span>
@@ -23,8 +20,6 @@
 </template>
 <script>
 
-	import checkbox from '../checkbox.vue';
-
 	export default {
 		name: 'item',
 		props: {
@@ -34,7 +29,6 @@
 			return {
 				active: 'active',
 				levelList: ['l1', 'l2', 'l3'],
-				checkbox: false,
 				open: false
 			}
 		},
@@ -58,9 +52,6 @@
 			addChild () {
 				this.$dispatch('add-child', this.model);
 			}
-		},
-		components: {
-			checkbox
 		},
 		transitions: {
 			collapse: {
@@ -107,8 +98,8 @@
 	}
 	.t-node{
 		border: 1px solid transparent;
-		border-top-color: #253545;
-		border-bottom-color: #2c4259;
+		border-top-color: #2c4259;
+		border-bottom-color: #1f2c39;
 		&:hover{
 			background: rgba(0, 234, 255, 0.4);
 			border: 1px solid #00eaff;

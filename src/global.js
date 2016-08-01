@@ -59,6 +59,7 @@ TCM.Global.common = (name, params, cbFn, failFn) => {
 
 TCM.Global.sysCaller = (name, params, cbFn, failFn) => {
 	switch (name) {
+		/*------------------线路和车站管理----------------------*/
 		case 'setSite':
 			/**
 			 * 设置管辖站点
@@ -104,13 +105,13 @@ TCM.Global.sysCaller = (name, params, cbFn, failFn) => {
 			 */
 			setTimeout(() => {cbFn(Test.editSite(params));}, 200);
 			break;
-		case 'deletedSites':
+		case 'deleteSites':
 			/**
 			 * 删除站点
 			 * @params  {ids: []} ( [description]
 			 * @return {}   [description]
 			 */
-			setTimeout(() => {cbFn(Test.deletedSites(params));}, 200);
+			setTimeout(() => {cbFn(Test.deleteSites(params));}, 200);
 			break;
 		case 'copySite':
 			/**
@@ -136,6 +137,7 @@ TCM.Global.sysCaller = (name, params, cbFn, failFn) => {
 			 */
 			setTimeout(() => {cbFn(Test.setAffiliateSites(params));}, 200);
 			break;
+		/*------------------角色管理----------------------*/
 		case 'getRoles':
 			/**
 			 * 进入角色管理页面
@@ -168,14 +170,15 @@ TCM.Global.sysCaller = (name, params, cbFn, failFn) => {
 			 */
 			setTimeout(() => {cbFn(Test.editRole(params));}, 200);
 			break;
-		case 'deletedRoles':
+		case 'deleteRoles':
 			/**
 			 * 删除角色
 			 * @params  {ids: []} ( [description]
 			 * @return {}   [description]
 			 */
-			setTimeout(() => {cbFn(Test.deletedRoles(params));}, 200);
+			setTimeout(() => {cbFn(Test.deleteRoles(params));}, 200);
 			break;
+		/*------------------用户管理----------------------*/
 		case 'getUsers':
 			/**
 			 * 进去用户管理
@@ -197,13 +200,13 @@ TCM.Global.sysCaller = (name, params, cbFn, failFn) => {
 			 */
 			setTimeout(() => {cbFn(Test.changePassword(params));}, 200);
 			break;
-		case 'deletedUsers':
+		case 'deleteUsers':
 			/**
 			 * 删除用户
 			 * @params  {ids: []} ( [description]
 			 * @return {}   [description]
 			 */
-			setTimeout(() => {cbFn(Test.deletedUsers(params));}, 200);
+			setTimeout(() => {cbFn(Test.deleteUsers(params));}, 200);
 			break;
 		case 'getUserRoles':
 			/**
@@ -245,11 +248,57 @@ TCM.Global.sysCaller = (name, params, cbFn, failFn) => {
 			 */
 			setTimeout(() => {cbFn(Test.chgpriv(params));}, 200);
 			break;
+		/*------------------系统设置----------------------*/
+		case 'getConfig':
+			/**
+			 * 进入系统管理页面
+			 * @params  {} ( [description]
+			 * @return {
+			 *      ControlReleaseTime: "3000",// MS
+			 *		TimingSetting: '{"schedule":"01:00:00","ntpIP":"1.1.1.1","ntpPort":"1","autoTiming":true}',
+			 *		ServerBackupSetting: '{"backupTVS" : true,"backupSS": true}', 
+			 *		StorageBackupSetting : true, 
+			 *		Sync : false,
+			 *		ControlOsdEnable : true
+			 * }   [description]
+			 */
+			setTimeout(() => {cbFn(Test.getConfig(params));}, 200);
+			break;
+		case 'setConfig':
+			/**
+			 * 修改系统设置
+			 * @params  {
+			 *          ControlReleaseTime: "3000"
+			 *          或者 TimingSetting: '{"schedule":"01:00:00","ntpIP":"1.1.1.1","ntpPort":"1","autoTiming":true}'
+			 *          ....
+			 *          只传一条修改数据
+			 * } ( [description]
+			 * @return {}   [description]
+			 */
+			setTimeout(() => {cbFn(Test.setConfig(params));}, 200);
+			break;
+		case 'syncConfig':
+			/**
+			 * 立即同步数据
+			 * @params  {} ( [description]
+			 * @return {}   [description]
+			 */
+			setTimeout(() => {cbFn(Test.syncConfig(params));}, 200);
+			break;
+		case 'timing':
+			/**
+			 * 立即校时
+			 * @params  {} ( [description]
+			 * @return {}   [description]
+			 */
+			setTimeout(() => {cbFn(Test.timing(params));}, 200);
+			break;
 	}
 };
 
 TCM.Global.deviceCaller = (name, params, cbFn, failFn) => {
 	switch (name) {
+		/*------------------设备列表----------------------*/
 		case 'getDeviceTree':
 			/**
 			 * 进入设备管理页面，获取tree数据
@@ -300,6 +349,99 @@ TCM.Global.deviceCaller = (name, params, cbFn, failFn) => {
 			 * }   [description]
 			 */
 			setTimeout(() => {cbFn(Test.getDevieList(params));}, 50);
+			break;
+		case 'getCreateDevice':
+			/**
+			 * 获取新建设备信息
+			 * @params  {id} ( [description]
+			 * @return {
+			 *         name,
+			 *         type,
+			 *         typeName,
+			 *         properties: [
+			 *         	{key, title, value, [type, list: [{name, value}]]}
+			 *         ]
+			 * }   [description]
+			 */
+			setTimeout(() => {cbFn(Test.getCreateDevice(params));}, 200);
+			break;
+		case 'getEditDevice':
+			/**
+			 * 获取修改设备信息
+			 * @params  {id} ( [description]
+			 * @return {
+			 *         id,
+			 *         name,
+			 *         type,
+			 *         typeName,
+			 *         properties: [
+			 *         	{key, title, value, [type, list: [{name, value}]]}
+			 *         ]
+			 * }   [description]
+			 */
+			setTimeout(() => {cbFn(Test.getEditDevice(params));}, 200);
+			break;
+		case 'createDevice':
+			/**
+			 * 新建设备
+			 * @params {
+			 *         name,
+			 *         type,
+			 *         properties: [
+			 *         	{key, title, value, [type, list: [{name, value}]]}
+			 *         ]
+			 * }   [description]
+			 * @return  {} ( [description]
+			 */
+			setTimeout(() => {cbFn(Test.createDevice(params));}, 200);
+			break;
+		case 'editDevice':
+			/**
+			 * 修改设备
+			 * @params {
+			 *         id,
+			 *         name,
+			 *         type,
+			 *         properties: [
+			 *         	{key, title, value, [type, list: [{name, value}]]}
+			 *         ]
+			 * }   [description]
+			 * @return  {} ( [description]
+			 */
+			setTimeout(() => {cbFn(Test.editDevice(params));}, 200);
+			break;
+		case 'deleteDevices':
+			/**
+			 * 删除设备
+			 * @params  {ids} ( [description]
+			 * @return {}   [description]
+			 */
+			setTimeout(() => {cbFn(Test.deleteDevices(params));}, 200);
+			break;
+		/*------------------摄像机分区----------------------*/
+		case 'getZoneTree':
+			/**
+			 * 进入设备管理页面，获取tree数据
+			 * @params  {} ( [description]
+			 * @return {  
+		 	 *      id: i,
+					name: siteNames[i],
+					children: [
+						{
+							id: 50, 
+							name: '站台层', 
+							num: 34,
+							children: [
+								{id: 20, name: '枪机', num: 15},
+								{id: 21, name: '球机', num: 11},
+								{id: 22, name: '半球机', num: 8}
+							]
+						}
+					]
+			 * }   
+			 * [单站点数据，此数据为多站点数据的children里面一项]
+			 */
+			setTimeout(() => {cbFn(Test.getZoneTree(params));}, 200);
 			break;
 	}
 }

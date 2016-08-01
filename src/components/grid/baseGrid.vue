@@ -123,6 +123,10 @@
 		color: #666;
 		font-family: '宋体';
 		font-size: 12px;
+		.checkbox{
+			margin-top: 8px;
+			margin-left: 4px;
+		}
 		ul.hdr{
 			background: #e8e8e8;
 			height: 31px;

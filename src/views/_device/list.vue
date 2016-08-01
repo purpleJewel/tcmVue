@@ -22,6 +22,14 @@
 				@handle="handleFn"
 			></grid>
 		</div>
+		<dialog 
+			:show.sync="dialog.show" 
+			:clz="dialog.clz"
+			:title="dialog.title"
+			:unit.sync="dialog.unit" 
+			@ok-fn="okFn">
+			<div slot="content">{{dialog.content}}</div>
+		</dialog>
 	</div>
 </div>
 </template>
@@ -29,6 +37,8 @@
 
 	import treeView from '../../components/tree/tree.vue';
 	import grid from '../../components/grid/grid.vue';
+	import dialog from '../../components/dialog.vue';
+	import Utils from '../../libs/utils.js';
 
 	let Caller = TCM.Global.deviceCaller;
 	export default {
@@ -36,6 +46,7 @@
 			const _self = this;
 			return {
 				treeData: {},
+				selected: null,
 				item: null,
 				gridParams: {
 					siteId: null,
@@ -62,6 +73,13 @@
 							cbFn(result);
 						});
 					}
+				},
+				dialog: {
+					show: false,
+					clz: '',
+					title: '',
+					content: '',
+					unit: null
 				}
 			};
 		},
@@ -80,6 +98,8 @@
 				let toolList = ['refresh', 'create', 'deleted'];
 				if (this.gridParams.siteId != window.getConst().siteId)
 					toolList = ['refresh'];
+				else if (this.selected.children.length)
+					toolList = ['refresh', 'deleted'];
 				return _.reduce(toolList, (obj, item) => {
 					obj[item] = _self[item];
 					return obj;
@@ -108,6 +128,7 @@
 				}
 			},
 			getGridParams (model) {
+				this.selected = model;
 				let params = this.gridParams;
 				if (model.tier === 0){
 					params.siteId = model.id;
@@ -137,27 +158,79 @@
 			refresh (cbFn) {
 				cbFn();
 			},
+			//default dialog okFn
+			okFn () {},
+			showDialog (cfg) {
+				for (let key in this.dialog) {
+					this.dialog[key] = cfg[key];
+				}
+				this.dialog.show = true;
+			},
+			//dialog配置及设置提交函数
+			useDialog4Tool (cfg, cbFn) {
+				this.showDialog({
+					clz: cfg.clz,
+					title: cfg.title,
+					unit: cfg.params
+				});
+				this.okFn = () => {
+					let msg = Utils.validator(cfg.params, this.dialog.clz);
+					if (msg)
+						return;
+					Caller(cfg.callerName, cfg.params, () => {
+						this.dialog.show = false;
+						cbFn();
+					});
+				};
+			},
 			edit (cbFn, item) {
-
+				Caller('getEditDevice', {id: item.id}, (result) => {
+					const title = result.typeName;
+					delete result.typeName;
+					this.useDialog4Tool({
+						clz: 'edit-device',
+						title: '修改' + title,
+						params: result,
+						callerName: 'editDevice'
+					}, cbFn);
+				});
 			},
 			create (cbFn) {
-
+				Caller('getCreateDevice', {id: this.selected.id}, (result) => {
+					const title = result.typeName;
+					delete result.typeName;
+					this.useDialog4Tool({
+						clz: 'create-device',
+						title: '新建' + title,
+						params: result,
+						callerName: 'createDevice'
+					}, cbFn);
+				});
 			},
-			deleted (cbFn, ids) {
-
+			deleted (cbFn, selected) {
+				const ids = _.isArray(selected) ? selected : [selected.id];
+				this.showDialog({
+					clz: 'deleted-device',
+					title: '删除设备',
+					content: '是否删除选中设备？'
+				});
+				this.okFn = () => {
+					Caller('deleteDevices', {ids: ids}, () => {
+						this.dialog.show = false;
+						cbFn();
+					});
+				};
 			}
 		},
 		components: {
 			treeView,
-			grid
+			grid,
+			dialog
 		},
 		ready () {
 			const _self = this;
 			Caller('getDeviceTree', {}, (result) => {			
 				_self.treeData = result;
-				_self.gridParams.siteId = result.children[0].id;
-				_self.grid.title = result.children[0].name + '设备列表';
-				_self.gridCbfn();
 			});
 		}
 	}
@@ -166,7 +239,7 @@
 	.device-list{
 		position: relative;
 		.title{
-			border-bottom: 1px solid #2c4259;
+			border-bottom: 1px solid #1f2c39;
 		}
 		.list-tree{
 			width: 250px;
@@ -176,6 +249,14 @@
 		}
 		.list-grid{
 			margin-left: 260px;
+		}
+		.create-device, .edit-device{
+			.pro-type{
+				display: none;
+			}
+			.label{
+				width: 90px;
+			}
 		}
 	}
 </style>
