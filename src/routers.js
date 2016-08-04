@@ -21,31 +21,31 @@ export default function(router){
             },
             auth: true
         },
-        "/sys/role": {
-            name: "role",
-            component: resolve => {
-               require(['./views/_sys/role.vue'],resolve);
-            },
-            auth: true
-        },
-        "/sys/level": {
-            name: "level",
-            component: resolve => {
-               require(['./views/_sys/level.vue'],resolve);
-            },
-            auth: true
-        },
-        "/sys/user": {
-            name: "user",
-            component: resolve => {
-               require(['./views/_sys/user.vue'],resolve);
-            },
-            auth: true
-        },
         "/sys/config": {
             name: "config",
             component: resolve => {
                require(['./views/_sys/config.vue'],resolve);
+            },
+            auth: true
+        },
+        "/user/role": {
+            name: "role",
+            component: resolve => {
+               require(['./views/_user/role.vue'],resolve);
+            },
+            auth: true
+        },
+        "/user/level": {
+            name: "level",
+            component: resolve => {
+               require(['./views/_user/level.vue'],resolve);
+            },
+            auth: true
+        },
+        "/user/user": {
+            name: "user",
+            component: resolve => {
+               require(['./views/_user/user.vue'],resolve);
             },
             auth: true
         },

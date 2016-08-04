@@ -48,6 +48,20 @@
     }
 }
 
+//tree的展开 和pointer状态
+.collapse-transition {
+    transition: all .5s ease;
+    overflow: hidden;
+}
+.collapse-enter, .collapse-leave {
+    max-height: 0!important;
+}
+.t-node{
+    cursor: pointer;
+    line-height: 2.5em;
+}
+
+
 .keyframes(@name; @arguments) {
     @-moz-keyframes @name { @arguments(); }
     @-webkit-keyframes @name { @arguments(); }
@@ -59,6 +73,66 @@
     -moz-animation: @arguments;
     animation: @arguments;
 }
+
+// 电视墙和存储管理样式
+.box-list{
+    padding: 20px 30px;
+    background: #fff;
+    border-radius: 0 0 5px 5px;
+    height: 865px;
+    color: #428bca;
+    li{
+        height: 170px;
+        margin: 0 10px 10px 0;
+        display: inline-block;
+        cursor: pointer;
+        position: relative;
+        &:hover{
+            .pic{
+                background-image: url(../images/pic/plan-hover.png);
+            }
+            .delete{
+                display: block;
+            }
+        }
+    }
+    .pic{
+        width: 230px;
+        height: 150px;
+        padding: 30px 20px;
+        background-image: url(../images/pic/plan.png);
+        color: #fff;
+    }
+    .add{
+        &:hover{
+            .pic{
+                background-image: url(../images/pic/addplan-hover.png);
+            }
+        }
+        .pic{
+            background-image: url(../images/pic/addplan.png);
+        }
+    }
+    .list{
+        line-height: 1.5em;
+    }
+    .text{
+        text-align: center;
+    }
+    .delete{
+        position: absolute;
+        display: none;
+        width: 24px; 
+        height: 24px;
+        top: 0;
+        right: 20px;
+        background-image: url(../images/pic/delplan.png);
+        &:hover{
+            background-image: url(../images/pic/delplan-hover.png);
+        }
+    }
+}
+
 
 /* .ico-right{
    .keyframes(tree-rotate; {

@@ -2,7 +2,7 @@
 <div id="body" transition="fade">
 	<div class="device-list">
 		<div class="list-tree">
-			<div class="title">线路设备列表</div>
+			<div class="title">设备列表</div>
 			<tree-view
 				:tree-data="treeData"
 				@active-node="getGridParams"
@@ -87,16 +87,17 @@
 			headers () {
 				return this.gridData.headers;
 			},
+			current () {
+				return this.gridParams.siteId == window.getConst().siteId;
+			},
 			//获取grid配置数据，并判断权限
 			hasCheckbox () { 
-				if (this.gridParams.siteId == window.getConst().siteId)
-					return true;
-				return false;
+				return this.current;
 			},
 			tools () { 
 				const _self = this;
 				let toolList = ['refresh', 'create', 'deleted'];
-				if (this.gridParams.siteId != window.getConst().siteId)
+				if (!this.current)
 					toolList = ['refresh'];
 				else if (this.selected.children.length)
 					toolList = ['refresh', 'deleted'];
@@ -107,7 +108,7 @@
 			},
 			actions () { 
 				const _self = this;
-				if (this.gridParams.siteId == window.getConst().siteId)
+				if (this.current)
 					return [
 						['edit', '编辑', _self.edit],
 						['deleted', '删除', _self.deleted]
@@ -116,9 +117,9 @@
 			}
 		},
 		methods: {
-			findId (node, n) {
+			findItem (node, n) {
 				if (node.tier != n) {
-					this.findId(node.getParent(), n);
+					this.findItem(node.getParent(), n);
 				} else {
 					this.item = {
 						id: node.id,
@@ -136,16 +137,16 @@
 					params.deviceTypeId = null;
 					this.grid.title = model.name + '设备列表';
 				} else if (model.tier === 1) {
-					this.findId(model, 0);
+					this.findItem(model, 0);
 					params.siteId = this.item.id;
 					params.majorTypeId = model.id;
 					params.deviceTypeId = null;
 					this.grid.title = this.item.name + '/' + model.name + '列表';
 				} else {
-					this.findId(model, 0);
+					this.findItem(model, 0);
 					params.siteId = this.item.id;
 					const name = this.item.name;
-					this.findId(model, 1);
+					this.findItem(model, 1);
 					params.majorTypeId = this.item.id;
 					params.deviceTypeId = model.id;
 					this.grid.title = name + '/' + this.item.name + '/' + model.name + '列表';

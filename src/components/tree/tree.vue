@@ -32,6 +32,14 @@
 			this.children.push(_child);
 			_child.setParent(this);
 		}
+		removeChild (_child) {
+			let _index = null;
+			this.children.forEach((child, idx) => {
+				if (child.id == _child.id) 
+					_index = idx;
+			});
+			this.children.splice(_index, 1);
+		}
 	}
 
 	// function findSiteId(node) {
@@ -108,12 +116,27 @@
 				}
 				this.root.active = model;
 			},
-			addChild (model) {
+			addChild (model, params) {
 				let node = new TreeNode();
-				node.id = 2000;
-				node.name = 'new suffix';
+				for (let key in params) {
+					if (key != 'children')
+						node[key] = params[key];
+				}
+				node.active = true;
 				node.tier = model.tier + 1;
+				if (params.children) {
+					for (let item of params.children) {
+						let child = new TreeNode();
+						for (let key in item) {
+							child[key] = item[key];
+						}
+						child.active = false;
+						child.tier = node.tier + 1;
+						node.setChild(child);
+					}
+				}
 				model.setChild(node);
+				this.activeItem(node);
 			}
 		},
 		components: {
@@ -121,7 +144,6 @@
 		},
 		watch: {
 			treeData () {
-				this.root.children = [];
 				this.root.active = null;
 				this.root.tier = -2;
 				this.createRoot();

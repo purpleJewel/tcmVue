@@ -598,7 +598,7 @@ const zone = {
 };
 function getZoneTree(k) {
 	let arr = [];
-	for (var i = 0; i < k; i++) {
+	for (var i = -2; i < k; i++) {
 		let one = _.cloneDeep(zone);
 		one.id = one.id + i;
 		one.name = one.name + i;
@@ -629,4 +629,144 @@ Test.getZoneTree = (params) => {
 			children: [treeData]
 		};
 	}
+};
+
+Test.createZone = (params) => {
+	return {
+		id: 123,
+		name: params.name,
+		num: 0,
+		children: [
+			{id: 1234, name: '枪机', num: 0},
+			{id: 1235, name: '半球', num: 0},
+			{id: 1236, name: '球机', num: 0}
+		]
+	}
+};
+
+Test.getZone = (params) => {
+	return {
+		id: params.id,
+		name: '站台层'
+	}
+};
+
+Test.editZone = (params) => {
+
+};
+
+Test.deleteZone = (params) => {
+
+};
+
+let Cameras = [];
+
+for (var i = 0; i < 180; i++) {
+	Cameras.push({
+		id: i,
+		name: '摄像机'+i,
+		type: ['数字枪机', '数字半球', '数字球机', '模拟枪机', '模拟球机', '模拟半球'][_.random(0, 5)],
+		desc: '描述描述描述' + i
+	});
+}
+
+Test.getCamerasList = (params) => {
+	return {
+		headers: {
+			titles: ['设备类型','设备名称', '备注'],
+			columns: ['type', 'name', 'desc'],
+			widths: [30, 30, 40]
+		},
+		total: Cameras.length,
+		data: getData2Grid(params, Cameras).data
+	}
+};
+
+Test.getCameras = (params) => {
+	let a20 = [];
+	let a21 = [];
+	let a22 = [];
+	for (var i = 0; i < 200; i++) {
+		let type = _.random(0, 2);
+		if (type == 0)
+			a20.push({id: i, name: '站台层-东侧-电梯-上行'+i})
+		else if (type == 1)
+			a21.push({id: i, name: '摄像机'+i})
+		else
+			a22.push({id: i, name: '摄像机'+i})
+	}
+	return {
+		id: -1,
+		children: [
+			{id: 1000, name: '枪机', children: a20},
+			{id: 1001, name: '球机', children: a21},
+			{id: 1002, name: '半球', children: a22}
+		]
+	};
+};
+
+Test.addCameras = (params) => {
+	return [
+		{
+			id: 48,
+			children: [
+				{id: 20, num: 20},
+				{id: 21, num: 21},
+				{id: 22, num: 22}
+			]
+		}
+	]
+};
+
+Test.deleteCameras = (params) => {
+	return [
+		{
+			id: 48,
+			children: [
+				{id: 20, num: 20},
+				{id: 21, num: 21},
+				{id: 22, num: 22}
+			]
+		},
+		{
+			id: 49,
+			children: [
+				{id: 20, num: 30},
+				{id: 21, num: 31},
+				{id: 22, num: 32}
+			]
+		}
+	]
+};
+
+/*************电视墙/存储管理***************/
+Test.getLineTree = (params) => {
+	return {
+		id: -2,
+		children: _.map(Sites, (site, idx) => {
+			return {id: site.id, name: site.name};
+		})
+	}
+};
+
+Test.getVideoList = (params) => {
+	let arr = null;
+	if (params.siteId) 
+		arr = new Array(params.siteId+1);
+	 else 
+		arr = '123'.split('');
+	return _.map(arr, (item, idx) => {
+		return {
+			id: idx, 
+			name: '电视墙'+idx, 
+			monitor: {
+				name: '监视器'+idx, 
+				style: '大华'
+			}, 
+			decoder: {
+				name: '解码器'+idx, 
+				style: '海信'
+			}
+		};
+	});
 };

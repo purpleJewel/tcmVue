@@ -2,7 +2,7 @@
 <li>
     <div class="t-node" :class="[levelList[model.tier], model.active ? 'active': '']" v-if="model.name" @click="toggle(model)">
     	<span class="t-ico" :class="{'ico-right': isFolder && !open, 'ico-down': isFolder && open}"></span>
-    	<div class="t-text" title="点击获取数据列表">
+    	<div class="t-text" title="获取数据列表">
 	    	<span class="t-name">{{model.name}}</span>
 	    	<span class="t-num" v-if="model.num || model.num === 0">({{model.num}})</span>
     	</div>
@@ -77,68 +77,58 @@
 	}
 </script>
 <style lang="less">
-	.collapse-transition {
-		transition: all .5s ease;
-		overflow: hidden;
-	}
-	.collapse-enter, .collapse-leave {
-		max-height: 0!important;
-	}
-	.node, .leaf, .add-node{
-	  cursor: pointer;
-	}
-	.add-node, .t-node{
-		line-height: 2.5em;
-	}
 	.active{
 		.t-name, .t-num{
 			color: #00d8ff;
 			font-weight: bold;
 		}
 	}
-	.t-node{
-		border: 1px solid transparent;
-		border-top-color: #2c4259;
-		border-bottom-color: #1f2c39;
-		&:hover{
-			background: rgba(0, 234, 255, 0.4);
-			border: 1px solid #00eaff;
-		}
-		.checkbox-a .checkbox{
-			margin: 4px;
-		}
-		.t-text{
-			display: inline-block;
+	.tree{
+		.t-node{
+			border: 1px solid transparent;
+			border-top-color: #2c4259;
+			border-bottom-color: #1f2c39;
 			&:hover{
-				color: #00d8ff;
+				background: rgba(0, 234, 255, 0.4);
+				border: 1px solid #00eaff;
+			}
+			.checkbox-a .checkbox{
+				margin: 4px;
+			}
+			.t-text{
+				display: inline-block;
+				position: relative;
+				&:hover{
+					color: #00d8ff;
+				}
 			}
 		}
-	}
-	.l1{
-		padding-left: 25px;
-		background: #1e2e3c;
-	}
-	.l2{
-		padding-left: 45px;
-		background: #253545;
-	}
-	.l3{
-		padding-left: 65px;
-		background: #334559;
-		border-color: transparent;
-	}
-	.t-ico{
-		display: inline-block;
-		width: 12px;
-		height: 12px;
-		transition: all 0.2s ease;
-		margin-right: 3px;
-	}
-	.ico-right{
-		background: url(../../assets/images/ixpic/arrow-tree-right.png);
-	}
-	.ico-down{
-		transform: rotate(90deg);
-		background: url(../../assets/images/ixpic/arrow-tree-down.png);
+		.l1{
+			padding-left: 25px;
+			background: #1e2e3c;
+		}
+		.l2{
+			padding-left: 45px;
+			background: #253545;
+		}
+		.l3{
+			padding-left: 65px;
+			background: #334559;
+			border-color: transparent;
+		}
+		.t-ico{
+			display: inline-block;
+			width: 12px;
+			height: 12px;
+			transition: all 0.2s ease;
+			margin-right: 3px;
+		}
+		.ico-right{
+			background: url(../../assets/images/ixpic/arrow-tree-right.png);
+		}
+		.ico-down{
+			transform: rotate(90deg);
+			background: url(../../assets/images/ixpic/arrow-tree-down.png);
+		}
 	}
 </style>

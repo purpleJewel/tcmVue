@@ -341,8 +341,9 @@ TCM.Global.deviceCaller = (name, params, cbFn, failFn) => {
 			 * @params  {siteId, majorTypeId, deviceTypeId} ( [description]
 			 * @return {
 			 *    headers: [
-			 *    	titles: [],
-			 *    	columns: []
+			 *    	titles: ['设备类型','设备名称', '备注'],
+			 *    	columns: ['type', 'name', 'desc'],
+			 *    	widths: [30, 30, 40]
 			 *    ],
 			 *    total,
 			 *    data: [id, name, type, desc...]
@@ -442,6 +443,117 @@ TCM.Global.deviceCaller = (name, params, cbFn, failFn) => {
 			 * [单站点数据，此数据为多站点数据的children里面一项]
 			 */
 			setTimeout(() => {cbFn(Test.getZoneTree(params));}, 200);
+			break;
+		case 'getZone':
+			/**
+			 * 获取单个分区信息
+			 * @params  {id} ( [description]
+			 * @return {id, name}   [description]
+			 */
+			setTimeout(() => {cbFn(Test.getZone(params));}, 200);
+			break;
+		case 'createZone':
+			/**
+			 * 新建分区
+			 * @params  {name} ( [description]
+			 * @return {
+			 *      id: 123,
+					name: params.name,
+					num: 0,
+					children: [
+						{id: 1234, name: '枪机', num: 0},
+						{id: 1235, name: '半球', num: 0},
+						{id: 1236, name: '球机', num: 0}
+					]
+			 * }   [description]
+			 */
+			setTimeout(() => {cbFn(Test.createZone(params));}, 200);
+			break;
+		case 'editZone':
+			/**
+			 * 修改分区
+			 * @params  {id, name} ( [description]
+			 * @return {}   [description]
+			 */
+			setTimeout(() => {cbFn(Test.editZone(params));}, 200);
+			break;
+		case 'deleteZone':
+			/**
+			 * 删除分区
+			 * @params  {ids} ( [description]
+			 * @return {}   [description]
+			 */
+			setTimeout(() => {cbFn(Test.deleteZone(params));}, 200);
+			break;
+		case 'getCamerasList':
+			/**
+			 * 获取分区设备列表
+			 * @params  {siteId, zoneId, deviceTypeId} ( [description]
+			 * @return {
+			 *    headers: [
+			 *    	titles: [],
+			 *    	columns: [],
+			 *    	widths: []
+			 *    ],
+			 *    total,
+			 *    data: [id, name, type, desc...]
+			 * }   [description]
+			 */
+			setTimeout(() => {cbFn(Test.getCamerasList(params));}, 50);
+			break;
+		case 'getCameras':
+			/**
+			 * 获取可添加分区的摄像机
+			 * @params  {siteId, zoneId, deviceTypeId} ( [description]
+			 * @return {}   [description]
+			 */
+			setTimeout(() => {cbFn(Test.getCameras(params));}, 50);
+			break;
+		case 'addCameras':
+			/**
+			 * 添加摄像机到分区
+			 * @params  {ids} ( [description]
+			 * @return {}   [description]
+			 */
+			setTimeout(() => {cbFn(Test.addCameras(params));}, 200);
+			break;
+		case 'deleteCameras':
+			/**
+			 * 删除分区中摄像机
+			 * @params  {ids} ( [description]
+			 * @return {}   [description]
+			 */
+			setTimeout(() => {cbFn(Test.deleteCameras(params));}, 200);
+			break;
+		/*-------------------电视墙/存储管理---------------------*/
+		case 'getLineTree':
+			/**
+			 * 获取线路tree列表
+			 * @params  {} ( [description]
+			 * @return {}   [description]
+			 */
+			setTimeout(() => {cbFn(Test.getLineTree(params));}, 200);
+			break;
+		case 'getVideoList':
+			/**
+			 * 获取电视墙列表
+			 * @params  {siteId} ( [description]
+			 * @return [
+			 *  {
+					id: idx, 
+					name: '电视墙'+i, 
+					monitor: {
+						name: '监视器'+i, 
+						style: '大华'
+					}, 
+					decoder: {
+						name: '解码器'+i, 
+						style: '海信'
+					}
+				};
+			 * ]   [description]
+			 */
+			setTimeout(() => {cbFn(Test.getVideoList(params));}, 200);
 			break;
 	}
 }

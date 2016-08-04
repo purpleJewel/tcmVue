@@ -42,6 +42,14 @@
 					></drop-down>
 				</li>
 			</ul>
+			<div class="pro-tree" v-if="unit && unit.tree">
+				<div class="tree-title" v-if="unit.tree.title">{{unit.tree.title}}</div>
+				<checkbox-tree
+					class="root"
+					:tree-data="unit.tree.treeData"
+					v-ref:tree
+				></checkbox-tree>
+			</div>
 		</div>
 		<div class="foot">
 			<a class="ok" @click="ok()"></a>
@@ -53,6 +61,7 @@
 <script>
 	import dropDown from '../components/dropdown.vue';
 	import checkBox from '../components/checkbox.vue';
+	import checkboxTree from '../components/checkboxTree/checkboxTree.vue';
 	/*
 	 *   clz,					//class
 	 *   title,					//显示title
@@ -63,13 +72,17 @@
 	 *   	checkboxList: [		//所有的checkbox数组
 	 *   		{key, text, selected}
 	 *   	],	
-	 *   	dropdownArr: [],	//使用dropdown类型的基础属性key
+	 *   	dropdownArr: [key1, key2],	//使用dropdown类型的基础属性key
 	 *    	dropdownList: {
 	 *   	  $key: [{name, value}]
 	 *      },
 	 *   	properties: [		//私有属性数组，便于后台数据库存储
 	 *   		{key, title, value, [type, list: [{name, value}]]}
-	 *   	]
+	 *   	],
+	 *   	tree: {
+	 *   		title,
+	 *   		treeData
+	 *   	}
 	 *   }
 	 *   inputTypes: [			//input的类型
 	 *   	{key, type}
@@ -98,7 +111,7 @@
 				return type || 'text';
 			},
 			defaultFilter (key) {
-				if (key != 'properties' && key != 'dropdownArr' && key != 'dropdownList' && key != 'checkboxList')
+				if (_.indexOf(['properties', 'dropdownArr', 'dropdownList', 'checkboxList', 'tree'], key) == -1)
 					return true;
 				return false;
 			},
@@ -125,12 +138,16 @@
 						return item.value = value;
 				});
 			},
+			getSelectArr () {
+				return this.$refs.tree.root;
+			},
 			ok () {this.$dispatch('ok-fn');},
 			cancel () {this.show = false;}
 		},
 		components: {
 			dropDown,
-			checkBox
+			checkBox,
+			checkboxTree
 		}
 	}
 </script>

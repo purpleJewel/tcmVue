@@ -148,7 +148,7 @@
 		}
 		[class^="col-"] {
 			display: inline-block;
-			text-align: center;
+			text-align: left;
 			vertical-align: middle;
 			min-width: 56px;
 			height: 33px;
@@ -158,9 +158,6 @@
 		.col-_check{
 			padding-top: 2px;
 			min-width: 20px;
-		}
-		.col-height (@height) {
-			height: @height;
 		}
 		.g-body{
 			background: #fff;
@@ -189,6 +186,7 @@
 				width: 24px;
 				height: 24px;
 				margin: 4px 10px 0 0;
+				position: relative;
 				&:hover{
 					background-color: #3eb6e3;
 					border-radius: 3px;

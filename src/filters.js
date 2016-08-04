@@ -38,7 +38,7 @@ exports.getGridValue = (key, value, clz, title) => {
                 break;
         }
     };
-    const CustomSysRole = (key, value) => {
+    const CustomUserRole = (key, value) => {
         switch (key) {
             case 'siteType':
                 return Const.Const.SiteTypeNamesHT[value];
@@ -51,7 +51,7 @@ exports.getGridValue = (key, value, clz, title) => {
                 break;
         }
     };
-    const CustomSysUser = (key, value) => {
+    const CustomUserUser = (key, value) => {
         switch (key) {
             case 'type':
                 return Const.Const.UserTypeNamesHT[value];
@@ -65,11 +65,11 @@ exports.getGridValue = (key, value, clz, title) => {
         case 'sys-line':
             return CustomSysLine(key, value);
             break;
-        case 'sys-role':
-            return CustomSysRole(key, value);
+        case 'user-role':
+            return CustomUserRole(key, value);
             break;
-        case 'sys-user':
-            return CustomSysUser(key, value);
+        case 'user-user':
+            return CustomUserUser(key, value);
             break;
         default:
             return value;
@@ -175,6 +175,9 @@ exports.getDialogTitle = (key, value, clz) => {
         case 'create-device': case 'edit-device':
             return CreateDevice(key, value);
             break; 
+        case 'create-zone': case 'edit-zone':
+            return '分区名称';
+            break;
         default:
             return value;
             break;
