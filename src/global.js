@@ -530,7 +530,12 @@ TCM.Global.deviceCaller = (name, params, cbFn, failFn) => {
 			/**
 			 * 获取线路tree列表
 			 * @params  {} ( [description]
-			 * @return {}   [description]
+			 * @return {
+			 *         id,
+			 *         children: [
+			 *         	 {id: site.id, name: site.name}
+			 *         ]
+			 * }   [description]
 			 */
 			setTimeout(() => {cbFn(Test.getLineTree(params));}, 200);
 			break;
@@ -554,6 +559,43 @@ TCM.Global.deviceCaller = (name, params, cbFn, failFn) => {
 			 * ]   [description]
 			 */
 			setTimeout(() => {cbFn(Test.getVideoList(params));}, 200);
+			break;
+		case 'getVideo':
+			/**
+			 * 获取电视墙
+			 * @params  {[id]} ( [description]
+			 * @return {
+			 *         monitor: {id, name},
+			 *         decoder: {id, name},
+			 *         monitorList: [{id, name}],
+			 *         decoderList: [{id, name, ports: [1, 2, 3...]}]
+			 * }   [description]
+			 */
+			setTimeout(() => {cbFn(Test.getVideo(params));}, 200);
+			break;
+		case 'addVideo':
+			/**
+			 * 添加电视墙
+			 * @params  {monitor, decoder, port} ( [description]
+			 * @return {}   [description]
+			 */
+			setTimeout(() => {cbFn(Test.addVideo(params));}, 200);
+			break;
+		case 'editVideo':
+			/**
+			 * 修改电视墙
+			 * @params  {id, monitor, decoder, port} ( [description]
+			 * @return {}   [description]
+			 */
+			setTimeout(() => {cbFn(Test.editVideo(params));}, 200);
+			break;
+		case 'deleteVideo':
+			/**
+			 * 删除电视墙
+			 * @params  {id} ( [description]
+			 * @return {}   [description]
+			 */
+			setTimeout(() => {cbFn(Test.deleteVideo(params));}, 200);
 			break;
 	}
 }

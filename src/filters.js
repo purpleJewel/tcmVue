@@ -153,6 +153,16 @@ exports.getDialogTitle = (key, value, clz) => {
                 return value;
         }
     };
+    const handleVideo = (key, value) => {
+        switch (key) {
+            case 'monitor':
+                return '监视器';
+            case 'decoder': 
+                return '关联设备名称';
+            case 'port':
+                return '关联设备通道号';
+        }
+    };
     switch (clz) {
         case 'create-site':
             return CreateSite(key, value);
@@ -177,6 +187,9 @@ exports.getDialogTitle = (key, value, clz) => {
             break; 
         case 'create-zone': case 'edit-zone':
             return '分区名称';
+            break;
+        case 'edit-video': case 'add-video':
+            return handleVideo(key, value);
             break;
         default:
             return value;

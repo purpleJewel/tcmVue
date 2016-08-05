@@ -757,7 +757,7 @@ Test.getVideoList = (params) => {
 		arr = '123'.split('');
 	return _.map(arr, (item, idx) => {
 		return {
-			id: idx, 
+			id: idx+1, 
 			name: '电视墙'+idx, 
 			monitor: {
 				name: '监视器'+idx, 
@@ -769,4 +769,33 @@ Test.getVideoList = (params) => {
 			}
 		};
 	});
+};
+
+Test.getVideo = (params) => {
+	return {
+		id: 1,
+		monitor: params.id ? 1: '',
+		decoder: params.id ? 2: '',
+		port: params.id ? 1: '',
+		monitorList: _.map(new Array(5), (item, idx) => {
+			return {value: idx, name: '监视器' + (idx+1)};
+		}),
+		decoderList: _.map(new Array(10), (item, idx) => {
+			return {value: idx, name: '解码器' + (idx+1), ports: _.map(new Array(_.random(1, 8)), (id, index) => {
+				return index + 1;
+			})};
+		})
+	};
+};
+
+Test.editVideo = (params) => {
+
+};
+
+Test.addVideo = (params) => {
+
+};
+
+Test.deleteVideo = (params) => {
+	
 };
