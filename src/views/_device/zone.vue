@@ -353,6 +353,10 @@
 			position: absolute;
 			top: 0;
 			left: 0;
+			.t-body {
+			    min-height: 932px;
+			    max-height: 932px;
+			}
 		}
 		.list-grid{
 			margin-left: 260px;

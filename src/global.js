@@ -597,5 +597,13 @@ TCM.Global.deviceCaller = (name, params, cbFn, failFn) => {
 			 */
 			setTimeout(() => {cbFn(Test.deleteVideo(params));}, 200);
 			break;
+		case 'getPlanList':
+			/**
+			 * 获取录像计划列表
+			 * @params  {siteId} ( [description]
+			 * @return {}   [description]
+			 */
+			setTimeout(() => {cbFn(Test.getPlanList(params));}, 200);
+			break;
 	}
 }

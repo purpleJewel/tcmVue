@@ -202,6 +202,9 @@
 					content: '是否删除选中用户？'
 				});
 				this.okFn = () => {
+					const _index = _.indexOf(ids, window.getConst().userId);
+					if (_index > -1) 
+						ids.splice(_index, 1);
 					Caller('deleteUsers', {ids: ids}, () => {
 						this.dialog.show = false;
 						cbFn();

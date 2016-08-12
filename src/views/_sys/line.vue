@@ -24,6 +24,7 @@
 			:has-checkbox="hasCheckbox"
 			:headers="headers" 
 			:tools="tools"
+			:html="colHTML"
 			:actions="actions"
 			:get-data="grid.getData"
 		></grid>
@@ -53,6 +54,7 @@
 				lineName: Const.lineName,
 				siteName: Const.siteName,
 				affiliateSites: [],
+				colHTML: ['selected'],
 				grid: {
 					clz: 'sys-line',
 					title: '线路和车站管理',

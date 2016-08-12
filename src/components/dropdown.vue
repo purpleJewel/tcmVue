@@ -56,6 +56,7 @@
 			border-radius: 5px;
 			text-align: left;
 			cursor: pointer;
+			transition: border ease-in-out 0.15s;
 			&:hover{
 				border: 2px solid #55BDFE;
 				.split{

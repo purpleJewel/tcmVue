@@ -14,10 +14,10 @@
 			<ul class="box-list">
 				<li class="box" v-for="item of items" @click="clickFn(item)">
 					<div class="pic">
-						<div class="list">{{showTitle[0]}} : {{item.monitor.name}}</div>
-						<div class="list">{{showTitle[1]}} : {{item.monitor.style}}</div>
-						<div class="list">{{showTitle[2]}} : {{item.decoder.name}}</div>
-						<div class="list">{{showTitle[3]}} : {{item.decoder.style}}</div>
+						<div class="list">{{showTitle[0]}}：{{item.storage}}</div>
+						<div class="list">{{showTitle[1]}}：{{item.circle}}天</div>
+						<div class="list">{{showTitle[2]}}：{{item.days | getDaysStr}}</div>
+						<div class="list">{{showTitle[3]}}：从{{item.from}}至{{item.to}}</div>
 					</div>
 					<div class="text">{{item.name}}</div>
 					<div class="delete" @click.stop="deleteFn(item)" v-if="add"></div>	
@@ -43,7 +43,10 @@
 							<div class="item">
 								<label class="label">保存周期：</label>
 								<dropdown
-									
+									key="day"
+									name="7天"
+									value="7"
+									list=""
 								></dropdown>
 							</div>
 						</li>
@@ -78,6 +81,11 @@
 				allow: window.OCC || window.PTSD,
 				showTitle: ['存储服务器', '保存周期', '日期计划', '录像时间'],
 				items: null,
+				dayList: [
+					{name: '7天', value: 7},
+					{name: '15天', value: 15},
+					{name: '30天', value: 30}
+				],
 				params: {},
 				dialog: {
 					show: false,
@@ -88,7 +96,7 @@
 		},
 		methods: {
 			refreshList () {
-				Caller('getVideoList', this.params, (result) => {
+				Caller('getPlanList', this.params, (result) => {
 					this.items = result;
 				});
 			},
@@ -239,6 +247,10 @@
 		width: 250px;
 		top: 0;
 		left: 0;
+		.t-body {
+		    min-height: 866px;
+		    max-height: 866px;
+		}
 	}
 	.store-list{
 		margin-left: 260px;

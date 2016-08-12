@@ -799,3 +799,51 @@ Test.addVideo = (params) => {
 Test.deleteVideo = (params) => {
 	
 };
+
+Test.getPlanList = (params) => {
+	let arr = null;
+	if (params.siteId) 
+		arr = new Array(params.siteId+1);
+	 else 
+		arr = '123'.split('');
+	return _.map(arr, (item, idx) => {
+		return {
+			id: idx+1, 
+			name: '存储计划'+idx, 
+			storage: '存储服务器'+idx,
+			circle: [7, 15, 30][_.random(0, 2)],
+			days: [[1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 0], [0, 6]][_.random(0, 2)],
+			from: '00:00',
+			to: '24:00'
+		};
+	});
+};
+
+Test.getPlan = (params) => {
+	return {
+		id: params.id || 1,
+		name: '存储计划-1',
+		siteName: '西直门',
+		circle: [7, 15, 30][_.random(0, 2)],
+		from: '00:00',
+		to: '24:00',
+		storage: 1,
+		storageList: _.map('123'.split(''), (storage, idx) => {
+			return {id: idx, name: '存储服务器-'+idx};
+		}),
+		cameras: [],
+		freeCameras: []
+	};
+};
+
+// 		id:params.id,
+// 		name:params.name,
+// 		siteId: CurrentSite.id,
+// 		ssIds: params.storages,
+// 		cameraIds: params.cameras ? params.cameras : [],
+// 		monitorIds: params.monitors ? params.monitors : [],
+// 		circle: params.circle,
+// 		days: params.days,
+// 		from: params.from,
+// 		to: params.to,
+// 		storages: IX.map(params.storages, function(s){ return "存储服务器"+s;})

@@ -1,14 +1,14 @@
 <template>
 <ul class="nav navbar-nav main">
 	<li id="nav-{{item[0]}}" :class="{'active': routeSup == item[0]}" v-for="item of navItems"  @mouseenter="item.$set(3, true)" @mouseleave="item.$set(3, false)">
-		<a v-link="{name: item[2] ? item[2][0][0] : item[0]}" @click="clickLink(item[0], item[2] ? item[2][0][0] : '')">
+		<a v-link="{name: item[2] ? item[2][0][0] : item[0]}">
 			<span class="nav-{{item[0]}} "></span>
 			<span>{{item[1]}}</span>
 		</a>
 		<div v-if="item[2] !== undefined">
 			<ul class="sub" v-show="item[3]" transition="bounce">
 				<li id="nav-{{item[0]}}-{{sub[0]}}" :class="{'active' : routeSub == sub[0]}" v-for="sub of item[2]" :style="{transition: `all 0.4s ease-out ${$index * 0.08}s`}">
-					<a v-link="{name: sub[0]}" @click="clickLink(item[0], sub[0])" v-text="sub[1]"></a>
+					<a v-link="{name: sub[0]}" v-text="sub[1]"></a>
 				</li>
 			</ul>
 		</div>
@@ -18,10 +18,7 @@
 <script>
 	export default {
 		data () {
-			let routerList = this.$route.path.split('/');
 			return {
-				routeSup: routerList[1],
-				routeSub: routerList[2],
 				navItems: [
 					['sys', '系统管理', [
 						['line', '线路和车站管理'],
@@ -41,12 +38,14 @@
 				]
 			}
 		},
-		methods: {
-			clickLink (sup, sub) {
-				this.routeSup = sup;
-				this.routeSub = sub;
+		computed: {
+			routeSup () {
+				return this.$route.path.split('/')[1];
+			},
+			routeSub () {
+				return this.$route.path.split('/')[2];
 			}
-		}	
+		}
 	}
 </script>
 <style lang="less">

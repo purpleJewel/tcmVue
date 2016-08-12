@@ -52,7 +52,7 @@
 			</div>
 		</div>
 		<div class="foot">
-			<a class="ok" @click="ok()"></a>
+			<a class="ok Enter" @click="ok()"></a>
 			<a class="cancel" @click="cancel()"></a>
 		</div>
 	</div>
@@ -197,6 +197,7 @@
 		border: 2px solid transparent;
 		border-radius: 5px;
 		text-indent: 10px;
+		transition: border ease-in-out 0.15s;
 		&:hover{
 			border: 2px solid #55BDFE;
 		}

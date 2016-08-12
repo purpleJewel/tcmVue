@@ -14,10 +14,10 @@
 			<ul class="box-list">
 				<li class="box" v-for="item of items" @click="clickFn(item)">
 					<div class="pic">
-						<div class="list">{{showTitle[0]}} : {{item.monitor.name}}</div>
-						<div class="list">{{showTitle[1]}} : {{item.monitor.style}}</div>
-						<div class="list">{{showTitle[2]}} : {{item.decoder.name}}</div>
-						<div class="list">{{showTitle[3]}} : {{item.decoder.style}}</div>
+						<div class="list">{{showTitle[0]}}：{{item.monitor.name}}</div>
+						<div class="list">{{showTitle[1]}}：{{item.monitor.style}}</div>
+						<div class="list">{{showTitle[2]}}：{{item.decoder.name}}</div>
+						<div class="list">{{showTitle[3]}}：{{item.decoder.style}}</div>
 					</div>
 					<div class="text">{{item.name}}</div>
 					<div class="delete" @click.stop="deleteFn(item)" v-if="add"></div>	
@@ -32,7 +32,7 @@
 			:show.sync="dialog.show" 
 			:clz="dialog.clz"
 			:title="dialog.title"
-			:unit.sync="dialog.unit" 
+			:unit.sync="dialog.unit"
 			@check-dropdown='checkDropdown'
 			@ok-fn="okFn">
 			<div slot="content">{{{dialog.content}}}</div>
@@ -175,6 +175,10 @@
 		width: 250px;
 		top: 0;
 		left: 0;
+		.t-body {
+		    min-height: 866px;
+		    max-height: 866px;
+		}
 	}
 	.video-list{
 		margin-left: 260px;
